@@ -6,6 +6,7 @@ var database = builder.AddPostgres("postgres")
                       .WithPgAdmin(resource =>
                       {
                           resource.WithUrlForEndpoint("http", url => url.DisplayText = "PG Admin");
+                          resource.WithLifetime(ContainerLifetime.Persistent);
                       })
                       .AddDatabase("projects-database");
 
@@ -19,6 +20,7 @@ var api = builder.AddProject<Projects.API>("api")
                      url.DisplayText += "Scalar";
                      url.Url += "/scalar";
                  })
+                 .WithReference(database)
                  .WaitFor(database);
 
 builder.AddProject<Projects.Client>("client")
