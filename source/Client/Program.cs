@@ -2,6 +2,8 @@ using Client.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 builder.Services.AddRazorComponents();
 
 var application = builder.Build();

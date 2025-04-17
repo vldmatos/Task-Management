@@ -16,4 +16,8 @@
     <ContainerPort Include="8081" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Configurations\Configurations.csproj" />
+  </ItemGroup>
+
 </Project>

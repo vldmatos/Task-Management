@@ -12,8 +12,8 @@ var database = builder.AddPostgres("postgres")
 var api = builder.AddProject<Projects.API>("api")
                  .WithUrlForEndpoint("https", url =>
                  {
-                     url.DisplayText = "API";
-                     url.Url += "/";
+                     url.DisplayText += "Scalar";
+                     url.Url += "/scalar";
                  })
                  .WaitFor(database);
 
