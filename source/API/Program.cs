@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 
 builder.Services.AddOpenApi()
+                .AddProblemDetail()
                 .AddEndpoints(Assembly.GetExecutingAssembly());
 
 builder.Services.AddEndpointsApiExplorer();
@@ -16,7 +17,8 @@ var application = builder.Build();
 application.MapDefaultEndpoints()
            .MapEndpoints();
 
-application.UseHttpsRedirection();
+application.UseHttpsRedirection()
+           .UseExceptionHandler();
 
 if (application.Environment.IsDevelopment())
 {
