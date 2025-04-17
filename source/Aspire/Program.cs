@@ -7,7 +7,11 @@ var database = builder.AddPostgres("postgres")
                       {
                           resource.WithUrlForEndpoint("http", url => url.DisplayText = "PG Admin");
                       })
-                      .AddDatabase("database");
+                      .AddDatabase("projects-database");
+
+var infrastructure = builder.AddProject<Projects.Infrastructure>("infrastructure")
+                            .WithReference(database)
+                            .WaitFor(database);
 
 var api = builder.AddProject<Projects.API>("api")
                  .WithUrlForEndpoint("https", url =>

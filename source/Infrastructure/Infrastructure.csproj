@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-Infrastructure-94a10f0a-6a96-4db7-8986-7a98f7a30ff0</UserSecretsId>
+    <RuntimeIdentifiers>linux-x64</RuntimeIdentifiers>
+    <ContainerRuntimeIdentifier>linux-x64</ContainerRuntimeIdentifier>
+    <EnableSdkContainerDebugging>True</EnableSdkContainerDebugging>
+    <ContainerBaseImage>mcr.microsoft.com/dotnet/runtime:9.0</ContainerBaseImage>
+    <IsPublishable>True</IsPublishable>
+    <EnableSdkContainerSupport>True</EnableSdkContainerSupport>
+    <DockerfileContext>..\..</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Configurations\Configurations.csproj" />
+  </ItemGroup>
+</Project>

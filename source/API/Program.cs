@@ -8,7 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-builder.AddNpgsqlDbContext<DataContext>("database");
+builder.AddNpgsqlDbContext<DataContext>("projects-database");
+
+
 builder.Services.Configure<JsonOptions>(options => options.SerializerOptions.PropertyNamingPolicy = null);
 
 builder.Services.AddOpenApi()
