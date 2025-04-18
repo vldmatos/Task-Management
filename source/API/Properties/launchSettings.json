@@ -4,7 +4,6 @@
 		"https":
 		{
 			"commandName": "Project",
-			"launchUrl": "scalar",
 			"environmentVariables":
 			{
 				"ASPNETCORE_ENVIRONMENT": "Development"
