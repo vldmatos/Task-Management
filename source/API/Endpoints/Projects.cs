@@ -44,7 +44,7 @@ public class Projects : IEndpoint
 
 
         endpointRouteBuilder.MapGet("/projects/{id}/tasks",
-            async Task<Results<Ok<TaskProject>, NotFound>>
+            async Task<Results<Ok<Domain.Task>, NotFound>>
             (int id, DataContext dataContext) =>
         {
             var tasks = await dataContext.Tasks

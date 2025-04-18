@@ -1,6 +1,5 @@
 ﻿using Configurations.Data;
 using Configurations.Extensions;
-using Domain;
 
 namespace API.Endpoints;
 
@@ -11,16 +10,15 @@ public class Tasks : IEndpoint
     public void MapEndpoints(IEndpointRouteBuilder endpointRouteBuilder)
     {
         endpointRouteBuilder.MapPut("/tasks/{id}",
-            async (int id, TaskProject taskProject, DataContext dataContext) =>
+            async (int id, Domain.Task task, DataContext dataContext) =>
         {
             var registeredTask = await dataContext.Tasks.FindAsync(id);
             if (registeredTask is null)
                 return Results.NotFound();
 
-            registeredTask.Title = taskProject.Title ?? registeredTask.Title;
-            registeredTask.Description = taskProject.Description ?? registeredTask.Description;
-            registeredTask.Status = taskProject.Status ?? registeredTask.Status;
-            registeredTask.DueDate = taskProject.DueDate;
+            registeredTask.Title = task.Title ?? registeredTask.Title;
+            registeredTask.Description = task.Description ?? registeredTask.Description;
+            registeredTask.DueDate = task.DueDate;
 
             await dataContext.SaveChangesAsync();
 
