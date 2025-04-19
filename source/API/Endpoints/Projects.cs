@@ -44,12 +44,13 @@ public class Projects : IEndpoint
 
 
         endpointRouteBuilder.MapGet("/projects/{id}/tasks",
-            async Task<Results<Ok<Domain.Task>, NotFound>>
+            async Task<Results<Ok<Domain.Task[]>, NotFound>>
             (int id, DataContext dataContext) =>
             {
                 var tasks = await dataContext.Tasks
                                              .AsNoTracking()
-                                             .FirstOrDefaultAsync(item => item.ProjectId == id);
+                                             .Where(item => item.ProjectId == id)
+                                             .ToArrayAsync();
 
                 return tasks is not null ?
                     TypedResults.Ok(tasks) :
@@ -75,23 +76,26 @@ public class Projects : IEndpoint
         .WithTags(Group);
 
 
-        endpointRouteBuilder.MapDelete("/projects/{projectId}/tasks/{taskId}",
-            async Task<Results<NoContent, NotFound>>
-            (int projectId, int taskId, DataContext dataContext) =>
+        endpointRouteBuilder.MapDelete("/projects/{id}",
+            async (int id, DataContext dataContext) =>
             {
-                var task = await dataContext.Tasks
-                                            .FirstOrDefaultAsync(t => t.Id == taskId &&
-                                                                      t.ProjectId == projectId)
-                           ??
-                           throw new ProblemException("Task not found",
-                                                      "The task you are trying to remove does not exist or is not part of the specified project.");
+                var project = await dataContext.Projects
+                                                .Include(p => p.Tasks)
+                                                .FirstOrDefaultAsync(p => p.Id == id);
 
-                dataContext.Tasks.Remove(task);
+                if (project is null)
+                    return Results.NotFound();
+
+                if (!project.CanBeDeleted())
+                    throw new ProblemException("Project cannot be deleted",
+                                               "Project has pending tasks.");
+
+                dataContext.Projects.Remove(project);
                 await dataContext.SaveChangesAsync();
 
-                return TypedResults.NoContent();
+                return Results.NoContent();
             })
-        .WithDescription("Remove a task from a project")
+        .WithDescription("Delete a project by id")
         .WithTags(Group);
     }
 }

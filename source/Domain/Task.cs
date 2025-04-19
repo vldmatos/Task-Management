@@ -26,7 +26,6 @@ public class Task
 
     public virtual ICollection<Comment> Comments { get; set; }
 
-
     public Task Change(Task task)
     {
         ArgumentNullException.ThrowIfNull(task);

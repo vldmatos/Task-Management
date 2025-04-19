@@ -17,6 +17,20 @@ public class Project
     public int UserId { get; set; }
 
     public virtual ICollection<Task> Tasks { get; set; } = [];
+
+    public bool CanBeDeleted()
+    {
+        if (Tasks.Count == 0)
+            return true;
+
+        foreach (var task in Tasks)
+        {
+            if (task.Status == TaskStatus.Pending)
+                return false;
+        }
+
+        return true;
+    }
 }
 
 public sealed class ProjectValidator : AbstractValidator<Project>
