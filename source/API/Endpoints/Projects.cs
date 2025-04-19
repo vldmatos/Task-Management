@@ -48,8 +48,8 @@ public class Projects : IEndpoint
             (int id, DataContext dataContext) =>
         {
             var tasks = await dataContext.Tasks
-                                           .AsNoTracking()
-                                           .FirstOrDefaultAsync(item => item.ProjectId == id);
+                                         .AsNoTracking()
+                                         .FirstOrDefaultAsync(item => item.ProjectId == id);
 
             return tasks is not null ?
                 TypedResults.Ok(tasks) :

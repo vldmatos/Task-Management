@@ -18,9 +18,10 @@ public class Tasks : IEndpoint
             if (registeredTask is null)
                 return Results.NotFound();
 
-            registeredTask.Title = task.Title ?? registeredTask.Title;
-            registeredTask.Description = task.Description ?? registeredTask.Description;
+            registeredTask.Title = task.Title;
+            registeredTask.Description = task.Description;
             registeredTask.DueDate = task.DueDate;
+            registeredTask.Status = task.Status;
 
             await dataContext.SaveChangesAsync();
 
