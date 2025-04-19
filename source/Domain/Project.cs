@@ -1,24 +1,44 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FluentValidation;
+using System.ComponentModel.DataAnnotations;
 
-namespace Domain
+namespace Domain;
+
+public class Project
 {
-    public class Project
+    [Key]
+    public int Id { get; set; }
+
+    public string Name { get; set; }
+
+    public string Description { get; set; }
+
+    public DateTime CreatedAt { get; set; }
+
+    public int UserId { get; set; }
+
+    public virtual ICollection<Task> Tasks { get; set; } = [];
+}
+
+public sealed class ProjectValidator : AbstractValidator<Project>
+{
+    public ProjectValidator()
     {
-        [Key]
-        public int Id { get; set; }
+        RuleFor(x => x.Name)
+            .NotEmpty()
+            .WithMessage("Project name is required.")
+            .MaximumLength(100)
+            .WithMessage("Project name must be at most 100 characters long.");
 
-        [Required]
-        [MaxLength(100)]
-        public required string Name { get; set; }
+        RuleFor(x => x.Description)
+            .NotEmpty()
+            .WithMessage("Project description is required.")
+            .MaximumLength(500)
+            .WithMessage("Project description must be at most 500 characters long.");
 
-        [MaxLength(500)]
-        public required string Description { get; set; }
-
-        public DateTime CreatedAt { get; set; }
-
-        [Required]
-        public int UserId { get; set; }
-
-        public virtual ICollection<Task> Tasks { get; set; } = [];
+        RuleFor(x => x.UserId)
+            .NotEmpty()
+            .WithMessage("User ID is required.")
+            .GreaterThan(0)
+            .WithMessage("User ID must be greater than 0.");
     }
 }

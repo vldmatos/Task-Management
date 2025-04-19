@@ -1,6 +1,7 @@
 ﻿using Configurations.Data;
 using Configurations.Extensions;
 using Domain;
+using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,7 +13,6 @@ public class Projects : IEndpoint
 
     public void MapEndpoints(IEndpointRouteBuilder endpointRouteBuilder)
     {
-
         endpointRouteBuilder.MapGet("/projects",
             async Task<Ok<Project[]>>
             (DataContext dataContext) =>
@@ -60,8 +60,12 @@ public class Projects : IEndpoint
 
 
         endpointRouteBuilder.MapPost("/projects",
-            async (DataContext dataContext, Project project) =>
+            async (DataContext dataContext, Project project, IValidator<Project> validator) =>
             {
+                var validatorResult = validator.Validate(project);
+                if (!validatorResult.IsValid)
+                    throw new ProblemException("Validation error", validatorResult.Errors);
+
                 dataContext.Projects.Add(project);
                 await dataContext.SaveChangesAsync();
 

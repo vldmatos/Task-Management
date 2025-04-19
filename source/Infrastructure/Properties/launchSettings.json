@@ -1,15 +1,19 @@
 {
-  "profiles": {
-    "Infrastructure": {
-      "commandName": "Project",
-      "environmentVariables": {
-        "DOTNET_ENVIRONMENT": "Development"
-      },
-      "dotnetRunMessages": true
-    },
-    "Container (.NET SDK)": {
-      "commandName": "SdkContainer"
-    }
-  },
-  "$schema": "https://json.schemastore.org/launchsettings.json"
+	"profiles":
+	{
+		"Infrastructure":
+		{
+			"commandName": "Project",
+			"environmentVariables":
+			{
+				"DOTNET_ENVIRONMENT": "Development"
+			},
+			"dotnetRunMessages": true
+		},
+		"Container (.NET SDK)":
+		{
+			"commandName": "SdkContainer"
+		}
+	},
+	"$schema": "https://json.schemastore.org/launchsettings.json"
 }

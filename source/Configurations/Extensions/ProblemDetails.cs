@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using FluentValidation.Results;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,9 @@ namespace Configurations.Extensions;
 
 public class ProblemException(string error, string message) : Exception(message)
 {
+    public ProblemException(string error, List<ValidationFailure> errors) : this(error, string.Join(" | ", errors))
+    { }
+
     public string Error { get; } = error;
 
     public override string Message { get; } = message;
