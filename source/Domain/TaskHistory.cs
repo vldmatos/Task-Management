@@ -10,12 +10,8 @@ public class TaskHistory
     [Required]
     public int TaskId { get; set; }
 
-    public virtual Task Task { get; set; }
-
     [Required]
     public int UserId { get; set; }
-
-    public virtual User User { get; set; }
 
     [Required]
     public string FieldChanged { get; set; }

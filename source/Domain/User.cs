@@ -18,6 +18,4 @@ public class User
     [EmailAddress]
     [MaxLength(150)]
     public required string Email { get; set; }
-
-    public virtual ICollection<Project> Projects { get; set; } = [];
 }

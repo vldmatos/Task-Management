@@ -51,12 +51,6 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 
             entity.Property(options => options.CreatedAt)
                 .HasColumnType("timestamp with time zone");
-
-            entity.HasOne(options => options.User)
-                  .WithMany(u => u.Projects)
-                  .HasForeignKey(options => options.UserId)
-                  .OnDelete(DeleteBehavior.Cascade)
-                  .IsRequired();
         });
 
         modelBuilder.Entity<Domain.Task>(entity =>
@@ -87,12 +81,6 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
             entity.Property(options => options.Priority)
                   .IsRequired()
                   .HasConversion<int>();
-
-            entity.HasOne(options => options.Project)
-                  .WithMany(p => p.Tasks)
-                  .HasForeignKey(options => options.ProjectId)
-                  .OnDelete(DeleteBehavior.Cascade)
-                  .IsRequired();
         });
 
         modelBuilder.Entity<TaskHistory>(entity =>
@@ -114,18 +102,6 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
             entity.Property(options => options.ChangedAt)
                   .IsRequired()
                   .HasColumnType("timestamp with time zone");
-
-            entity.HasOne(options => options.Task)
-                  .WithMany(t => t.HistoryEntries)
-                  .HasForeignKey(options => options.TaskId)
-                  .OnDelete(DeleteBehavior.Cascade)
-                  .IsRequired();
-
-            entity.HasOne(options => options.User)
-                  .WithMany()
-                  .HasForeignKey(options => options.UserId)
-                  .OnDelete(DeleteBehavior.Restrict)
-                  .IsRequired();
         });
 
         modelBuilder.Entity<Comment>(entity =>
@@ -141,18 +117,6 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 
             entity.Property(options => options.CreatedAt)
                   .HasColumnType("timestamp with time zone");
-
-            entity.HasOne(options => options.Task)
-                  .WithMany(t => t.Comments)
-                  .HasForeignKey(options => options.TaskId)
-                  .OnDelete(DeleteBehavior.Cascade)
-                  .IsRequired();
-
-            entity.HasOne(options => options.User)
-                  .WithMany()
-                  .HasForeignKey(options => options.UserId)
-                  .OnDelete(DeleteBehavior.Restrict)
-                  .IsRequired();
         });
     }
 }
