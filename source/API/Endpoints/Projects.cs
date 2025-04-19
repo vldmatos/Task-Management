@@ -80,8 +80,8 @@ public class Projects : IEndpoint
             async (int id, DataContext dataContext) =>
             {
                 var project = await dataContext.Projects
-                                                .Include(p => p.Tasks)
-                                                .FirstOrDefaultAsync(p => p.Id == id);
+                                               .Include(p => p.Tasks)
+                                               .FirstOrDefaultAsync(p => p.Id == id);
 
                 if (project is null)
                     return Results.NotFound();

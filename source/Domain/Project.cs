@@ -5,6 +5,8 @@ namespace Domain;
 
 public class Project
 {
+    public const short MaxTasks = 20;
+
     [Key]
     public int Id { get; set; }
 
@@ -30,6 +32,11 @@ public class Project
         }
 
         return true;
+    }
+
+    public bool CanBeAddTask()
+    {
+        return (Tasks.Count < MaxTasks);
     }
 }
 

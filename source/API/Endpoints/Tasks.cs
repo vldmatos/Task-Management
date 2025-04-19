@@ -20,9 +20,15 @@ public class Tasks : IEndpoint
                 if (!validatorResult.IsValid)
                     throw new ProblemException("Validation error", validatorResult.Errors);
 
-                var project = await dataContext.Projects.FindAsync(task.ProjectId) ??
+                var project = await dataContext.Projects
+                                               .Include(p => p.Tasks)
+                                               .FirstOrDefaultAsync(p => p.Id == task.ProjectId) ??
                     throw new ProblemException("Project for task not found",
                                                "Tasks must be created in an existing project.");
+
+                if (!project.CanBeAddTask())
+                    throw new ProblemException("Task not can be added",
+                                               $"Limit of {Project.MaxTasks} tasks per project.");
 
                 task.CreatedAt = DateTime.UtcNow;
 
