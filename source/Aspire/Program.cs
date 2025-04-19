@@ -21,7 +21,8 @@ var api = builder.AddProject<Projects.API>("api")
                      url.Url += "/scalar";
                  })
                  .WithReference(database)
-                 .WaitFor(database);
+                 .WaitFor(database)
+                 .WaitFor(infrastructure);
 
 builder.AddProject<Projects.Client>("client")
        .WithUrlForEndpoint("https", url =>
@@ -30,6 +31,7 @@ builder.AddProject<Projects.Client>("client")
            url.Url += "/";
        })
        .WithReference(api)
-       .WaitFor(api);
+       .WaitFor(api)
+       .WaitFor(infrastructure);
 
 builder.Build().Run();

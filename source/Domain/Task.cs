@@ -25,6 +25,59 @@ public class Task
     public virtual ICollection<TaskHistory> HistoryEntries { get; set; }
 
     public virtual ICollection<Comment> Comments { get; set; }
+
+
+    public Task Change(Task task)
+    {
+        ArgumentNullException.ThrowIfNull(task);
+
+        if (task.Title != Title)
+            Title = task.Title;
+
+        if (task.Description != Description)
+            Description = task.Description;
+
+        if (task.DueDate != DueDate)
+            DueDate = task.DueDate;
+
+        if (task.Status != Status)
+            Status = task.Status;
+
+        return this;
+    }
+
+    public List<TaskHistory> GetChanges(Task task)
+    {
+        ArgumentNullException.ThrowIfNull(task);
+
+        var changes = new List<TaskHistory>();
+
+        if (task.Title != Title)
+            changes.Add(new TaskHistory { TaskId = Id, Change = $"Title changed to: {task.Title}", ChangedAt = DateTime.UtcNow });
+
+        if (task.Description != Description)
+            changes.Add(new TaskHistory { TaskId = Id, Change = $"Description changed to: {task.Description}", ChangedAt = DateTime.UtcNow });
+
+        if (task.DueDate != DueDate)
+            changes.Add(new TaskHistory { TaskId = Id, Change = $"DueDate changed to: {task.DueDate}", ChangedAt = DateTime.UtcNow });
+
+        if (task.Status != Status)
+            changes.Add(new TaskHistory { TaskId = Id, Change = $"Status changed to: {task.Status}", ChangedAt = DateTime.UtcNow });
+
+        return changes;
+    }
+
+    public TaskHistory GetChanges(Comment comment)
+    {
+        ArgumentNullException.ThrowIfNull(comment);
+
+        return new TaskHistory
+        {
+            TaskId = Id,
+            Change = $"Comment added: {comment.Content}",
+            ChangedAt = DateTime.UtcNow
+        };
+    }
 }
 
 public sealed class TaskValidator : AbstractValidator<Task>
@@ -40,8 +93,8 @@ public sealed class TaskValidator : AbstractValidator<Task>
         RuleFor(x => x.Description)
             .NotEmpty()
             .WithMessage("Task description is required.")
-            .MaximumLength(500)
-            .WithMessage("Task description must be at most 500 characters long.");
+            .MaximumLength(1000)
+            .WithMessage("Task description must be at most 1000 characters long.");
 
         RuleFor(x => x.DueDate)
             .NotEmpty()

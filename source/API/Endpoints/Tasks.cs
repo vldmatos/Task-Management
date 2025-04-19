@@ -47,6 +47,9 @@ public class Tasks : IEndpoint
                                             "Comment must be created in an existing task.");
 
                 comment.CreatedAt = DateTime.UtcNow;
+                var taskHistory = task.GetChanges(comment);
+
+                dataContext.TaskHistories.Add(taskHistory);
 
                 await dataContext.Comments.AddAsync(comment);
                 await dataContext.SaveChangesAsync();
@@ -68,10 +71,10 @@ public class Tasks : IEndpoint
                 if (registeredTask is null)
                     return Results.NotFound();
 
-                registeredTask.Title = task.Title;
-                registeredTask.Description = task.Description;
-                registeredTask.DueDate = task.DueDate;
-                registeredTask.Status = task.Status;
+                var taskHistory = registeredTask.GetChanges(task);
+                registeredTask = registeredTask.Change(task);
+
+                dataContext.TaskHistories.AddRange(taskHistory);
 
                 await dataContext.SaveChangesAsync();
 

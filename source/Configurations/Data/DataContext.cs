@@ -11,6 +11,8 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
     public DbSet<TaskHistory> TaskHistories { get; set; }
     public DbSet<Comment> Comments { get; set; }
 
+    private const string DateTimeType = "timestamp with time zone";
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -50,7 +52,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
                   .HasMaxLength(500);
 
             entity.Property(options => options.CreatedAt)
-                .HasColumnType("timestamp with time zone");
+                  .HasColumnType(DateTimeType);
         });
 
         modelBuilder.Entity<Domain.Task>(entity =>
@@ -69,10 +71,10 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 
             entity.Property(options => options.DueDate)
                   .IsRequired()
-                  .HasColumnType("timestamp with time zone");
+                  .HasColumnType(DateTimeType);
 
             entity.Property(options => options.CreatedAt)
-                  .HasColumnType("timestamp with time zone");
+                  .HasColumnType(DateTimeType);
 
             entity.Property(options => options.Status)
                   .IsRequired()
@@ -90,18 +92,13 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
                   .UseIdentityAlwaysColumn()
                   .ValueGeneratedOnAdd();
 
-            entity.Property(options => options.FieldChanged)
-                  .IsRequired();
-
-            entity.Property(options => options.OldValue)
-                  .IsRequired();
-
-            entity.Property(options => options.NewValue)
-                  .IsRequired();
+            entity.Property(options => options.Change)
+                  .IsRequired()
+                  .HasMaxLength(1000);
 
             entity.Property(options => options.ChangedAt)
                   .IsRequired()
-                  .HasColumnType("timestamp with time zone");
+                  .HasColumnType(DateTimeType);
         });
 
         modelBuilder.Entity<Comment>(entity =>
@@ -116,7 +113,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
                   .HasMaxLength(1000);
 
             entity.Property(options => options.CreatedAt)
-                  .HasColumnType("timestamp with time zone");
+                  .HasColumnType(DateTimeType);
         });
     }
 }

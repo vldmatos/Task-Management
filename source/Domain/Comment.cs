@@ -36,7 +36,7 @@ public sealed class CommentValidator : AbstractValidator<Comment>
         RuleFor(x => x.Content)
             .NotEmpty()
             .WithMessage("Comment content is required.")
-            .MaximumLength(500)
-            .WithMessage("Comment content must be at most 500 characters long.");
+            .MaximumLength(1000)
+            .WithMessage("Comment content must be at most 1000 characters long.");
     }
 }

@@ -12,11 +12,7 @@ public class TaskHistory
 
     public int UserId { get; set; }
 
-    public string FieldChanged { get; set; }
-
-    public string OldValue { get; set; }
-
-    public string NewValue { get; set; }
+    public string Change { get; set; }
 
     public DateTime ChangedAt { get; set; }
 }
@@ -37,22 +33,10 @@ public sealed class TasksHistoryValidator : AbstractValidator<TaskHistory>
             .GreaterThan(0)
             .WithMessage("User ID must be greater than 0.");
 
-        RuleFor(x => x.FieldChanged)
+        RuleFor(x => x.Change)
             .NotEmpty()
-            .WithMessage("Field changed is required.")
-            .MaximumLength(100)
-            .WithMessage("Field changed must be at most 100 characters long.");
-
-        RuleFor(x => x.OldValue)
-            .NotEmpty()
-            .WithMessage("Old value is required.")
-            .MaximumLength(500)
-            .WithMessage("Old value must be at most 500 characters long.");
-
-        RuleFor(x => x.NewValue)
-            .NotEmpty()
-            .WithMessage("New value is required.")
-            .MaximumLength(500)
-            .WithMessage("New value must be at most 500 characters long.");
+            .WithMessage("Field change is required.")
+            .MaximumLength(1000)
+            .WithMessage("Field changed must be at most 1000 characters long.");
     }
 }
