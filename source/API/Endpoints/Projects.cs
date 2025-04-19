@@ -71,6 +71,23 @@ public class Projects : IEndpoint
         .WithTags(Group);
 
 
+        endpointRouteBuilder.MapDelete("/projects/{projectId}/tasks/{taskId}",
+            async Task<Results<NoContent, NotFound>>
+            (int projectId, int taskId, DataContext dataContext) =>
+        {
+            var task = await dataContext.Tasks
+                                        .FirstOrDefaultAsync(t => t.Id == taskId &&
+                                                                  t.ProjectId == projectId)
+                       ??
+                       throw new ProblemException("Task not found",
+                                                  "The task you are trying to remove does not exist or is not part of the specified project.");
 
+            dataContext.Tasks.Remove(task);
+            await dataContext.SaveChangesAsync();
+
+            return TypedResults.NoContent();
+        })
+        .WithDescription("Remove a task from a project")
+        .WithTags(Group);
     }
 }

@@ -21,7 +21,8 @@ application.MapDefaultEndpoints()
            .MapEndpoints();
 
 application.UseHttpsRedirection()
-           .UseExceptionHandler();
+           .UseExceptionHandler()
+           .UseStatusCodePages();
 
 if (application.Environment.IsDevelopment())
 {

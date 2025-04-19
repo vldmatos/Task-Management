@@ -32,8 +32,7 @@ public class ProblemExceptionHandler(IProblemDetailsService problemDetailsServic
             Status = StatusCodes.Status400BadRequest,
             Title = problemException.Error,
             Detail = problemException.Message,
-            Type = "Bad Request",
-
+            Type = "Bad Request"
         };
 
         httpContext.Response.StatusCode = problemDetails.Status.Value;
@@ -50,6 +49,7 @@ public static class ProblemDetailsExtensions
 {
     public static IServiceCollection AddProblemDetail(this IServiceCollection services)
     {
+        services.AddExceptionHandler<ProblemExceptionHandler>();
         services.AddProblemDetails(options =>
         {
             options.CustomizeProblemDetails = context =>
