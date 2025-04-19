@@ -1,5 +1,7 @@
 ﻿using Configurations.Data;
 using Configurations.Extensions;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Endpoints;
 
@@ -41,6 +43,39 @@ public class Tasks : IEndpoint
             return Results.NoContent();
         })
         .WithDescription("Delete task by id")
+        .WithTags(Group);
+
+
+        endpointRouteBuilder.MapGet("/tasks/{id}",
+            async Task<Results<Ok<Domain.Task>, NotFound>>
+            (int id, DataContext dataContext) =>
+        {
+            var task = await dataContext.Tasks
+                                        .AsNoTracking()
+                                        .FirstOrDefaultAsync(item => item.Id == id);
+            return task is not null ?
+                TypedResults.Ok(task) :
+                TypedResults.NotFound();
+        })
+        .WithDescription("Get task by id")
+        .WithTags(Group);
+
+
+        endpointRouteBuilder.MapPost("/tasks",
+            async (Domain.Task task, DataContext dataContext) =>
+        {
+            var project = await dataContext.Projects.FindAsync(task.ProjectId);
+            if (project is null)
+                throw new ProblemException("Project for task not found", "Tasks must be created in an existing project.");
+
+            task.CreatedAt = DateTime.UtcNow;
+
+            await dataContext.Tasks.AddAsync(task);
+            await dataContext.SaveChangesAsync();
+
+            return Results.Created($"/tasks/{task.Id}", task);
+        })
+        .WithDescription("Create a new task in an existing project")
         .WithTags(Group);
     }
 }
