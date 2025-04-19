@@ -39,12 +39,12 @@ public class Users : IEndpoint
             dataContext.Users.Add(user);
             await dataContext.SaveChangesAsync();
 
-            return TypedResults.Created($"/user/{user.Id}", user);
+            return TypedResults.Created($"/users/{user.Id}", user);
         })
        .WithDescription("Create a new user")
        .WithTags(Group);
 
-        endpointRouteBuilder.MapGet("/user/{id}/projects",
+        endpointRouteBuilder.MapGet("/users/{id}/projects",
            async Task<Results<Ok<Domain.Project>, NotFound>>
            (int id, DataContext dataContext) =>
         {

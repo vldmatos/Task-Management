@@ -65,7 +65,7 @@ public class Projects : IEndpoint
             dataContext.Projects.Add(project);
             await dataContext.SaveChangesAsync();
 
-            return TypedResults.Created();
+            return TypedResults.Created($"/projects/{project.Id}", project);
         })
         .WithDescription("Create a new project")
         .WithTags(Group);
