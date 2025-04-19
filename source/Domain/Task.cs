@@ -21,7 +21,7 @@ namespace Domain
         public TaskStatus Status { get; set; }
 
         [Required]
-        public TaskPriority Priority { get; set; }
+        public TaskPriority Priority { get; init; }
 
         public DateTime CreatedAt { get; set; }
 

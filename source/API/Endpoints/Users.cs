@@ -44,6 +44,7 @@ public class Users : IEndpoint
        .WithDescription("Create a new user")
        .WithTags(Group);
 
+
         endpointRouteBuilder.MapGet("/users/{id}/projects",
            async Task<Results<Ok<Domain.Project>, NotFound>>
            (int id, DataContext dataContext) =>
