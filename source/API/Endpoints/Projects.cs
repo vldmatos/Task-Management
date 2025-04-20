@@ -113,5 +113,24 @@ public class Projects : IEndpoint
         .WithTags(Group)
         .RequireAuthorization(policy => policy.RequireRole
             (Roles.Regular, Roles.Manager));
+
+        endpointRouteBuilder.MapGet("/projects/{projectId}/report",
+            async Task<Results<Ok<Report>, NotFound>>
+            (int projectId, DataContext dataContext) =>
+            {
+                var project = await dataContext.Projects
+                                               .Include(p => p.Tasks)
+                                               .AsNoTracking()
+                                               .FirstOrDefaultAsync(p => p.Id == projectId);
+
+                if (project is null)
+                    return TypedResults.NotFound();
+
+                return TypedResults.Ok(project.GenerateReport());
+            })
+        .WithDescription("Generate a performance report for a specific project")
+        .WithTags(Group)
+        .RequireAuthorization(policy => policy.RequireRole(Roles.Manager));
+
     }
 }

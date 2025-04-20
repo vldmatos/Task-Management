@@ -38,6 +38,24 @@ public class Project
     {
         return (Tasks.Count < MaxTasks);
     }
+
+    public Report GenerateReport()
+    {
+        var report = new Report
+        (
+            Id,
+            Name,
+            Tasks.Count,
+            Tasks.Count(t => t.Status == TaskStatus.Completed),
+            Tasks.Count(t => t.Status == TaskStatus.Pending),
+            Tasks.Where(t => t.Status == TaskStatus.Completed)
+                 .Select(t => (t.CreatedAt - t.DueDate).TotalDays)
+                 .DefaultIfEmpty(0)
+                 .Average()
+        );
+
+        return report;
+    }
 }
 
 public sealed class ProjectValidator : AbstractValidator<Project>
