@@ -6,7 +6,7 @@ public class Tasks
     public void Change_ShouldRecordChangesInHistory()
     {
         // Arrange
-        var task = new Domain.Task
+        var task = new Domain.Entities.Task
         {
             Id = 1,
             Title = "Initial Title",
@@ -18,7 +18,7 @@ public class Tasks
             ProjectId = 1
         };
 
-        var updatedTask = new Domain.Task
+        var updatedTask = new Domain.Entities.Task
         {
             Id = 1,
             Title = "Updated Title",

@@ -1,6 +1,7 @@
 using Configurations.Authorizations;
 using Configurations.Data;
 using Configurations.Extensions;
+using Domain.Entities;
 using FluentValidation;
 using Scalar.AspNetCore;
 using System.Reflection;
@@ -18,7 +19,7 @@ builder.AddNpgsqlDbContext<DataContext>("projects-database");
 builder.Services.AddOpenApi()
                 .AddProblemDetail()
                 .AddEndpoints(Assembly.GetExecutingAssembly())
-                .AddValidatorsFromAssembly(typeof(Domain.Project).Assembly, includeInternalTypes: true);
+                .AddValidatorsFromAssembly(typeof(Project).Assembly, includeInternalTypes: true);
 
 builder.Services.AddScoped(provider => new TokenService(key));
 

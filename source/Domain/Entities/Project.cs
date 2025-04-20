@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using System.ComponentModel.DataAnnotations;
 
-namespace Domain;
+namespace Domain.Entities;
 
 public class Project
 {
@@ -37,11 +37,14 @@ public class Project
 
     public bool CanBeAddTask()
     {
-        return (Tasks.Count < MaxTasks);
+        return Tasks.Count < MaxTasks;
     }
 
-    public Report GenerateReport()
+    public Report GenerateReport(User user)
     {
+        if (user.Role != Roles.Manager)
+            throw new UnauthorizedAccessException("User does not have permission to generate a report.");
+
         var report = new Report
         (
             Id,

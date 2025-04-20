@@ -1,4 +1,4 @@
-﻿using Domain;
+﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Configurations.Data;
@@ -6,7 +6,7 @@ namespace Configurations.Data;
 public class DataContext(DbContextOptions<DataContext> options) : DbContext(options)
 {
     public DbSet<Project> Projects { get; set; }
-    public DbSet<Domain.Task> Tasks { get; set; }
+    public DbSet<Domain.Entities.Task> Tasks { get; set; }
     public DbSet<TaskHistory> TaskHistories { get; set; }
     public DbSet<Comment> Comments { get; set; }
 
@@ -34,7 +34,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
                   .HasColumnType(DateTimeType);
         });
 
-        modelBuilder.Entity<Domain.Task>(entity =>
+        modelBuilder.Entity<Domain.Entities.Task>(entity =>
         {
             entity.HasKey(options => options.Id);
             entity.Property(options => options.Id)

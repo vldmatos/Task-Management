@@ -1,4 +1,4 @@
-﻿namespace Configurations.Authorizations;
+﻿namespace Domain;
 
 public class User
 {

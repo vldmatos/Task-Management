@@ -1,5 +1,6 @@
 ﻿using Configurations.Authorizations;
 using Configurations.Extensions;
+using Domain;
 
 namespace API.Endpoints;
 

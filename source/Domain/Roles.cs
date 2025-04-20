@@ -1,6 +1,6 @@
-﻿namespace Configurations.Authorizations;
+﻿namespace Domain;
 
-public static class Roles
+public class Roles
 {
     public const string Manager = "manager";
 

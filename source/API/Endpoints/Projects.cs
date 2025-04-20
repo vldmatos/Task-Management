@@ -1,7 +1,7 @@
-﻿using Configurations.Authorizations;
-using Configurations.Data;
+﻿using Configurations.Data;
 using Configurations.Extensions;
 using Domain;
+using Domain.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
@@ -49,7 +49,7 @@ public class Projects : IEndpoint
 
 
         endpointRouteBuilder.MapGet("/projects/{id}/tasks",
-            async Task<Results<Ok<Domain.Task[]>, NotFound>>
+            async Task<Results<Ok<Domain.Entities.Task[]>, NotFound>>
             (int id, DataContext dataContext) =>
             {
                 var tasks = await dataContext.Tasks
@@ -116,7 +116,9 @@ public class Projects : IEndpoint
 
         endpointRouteBuilder.MapGet("/projects/{projectId}/report",
             async Task<Results<Ok<Report>, NotFound>>
-            (int projectId, DataContext dataContext) =>
+            (int projectId,
+             HttpContext httpContext,
+             DataContext dataContext) =>
             {
                 var project = await dataContext.Projects
                                                .Include(p => p.Tasks)
@@ -126,7 +128,13 @@ public class Projects : IEndpoint
                 if (project is null)
                     return TypedResults.NotFound();
 
-                return TypedResults.Ok(project.GenerateReport());
+                var user = new User
+                {
+                    Username = httpContext.User.Identity?.Name ?? "Unknown",
+                    Role = httpContext.User.Claims.FirstOrDefault(c => c.Type == "role")?.Value ?? "Unknown"
+                };
+
+                return TypedResults.Ok(project.GenerateReport(user));
             })
         .WithDescription("Generate a performance report for a specific project")
         .WithTags(Group)

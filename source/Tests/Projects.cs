@@ -1,4 +1,6 @@
-﻿namespace Tests;
+﻿using Domain.Entities;
+
+namespace Tests;
 
 public class Projects
 {
@@ -6,14 +8,14 @@ public class Projects
     public void CanAddTaskToProject()
     {
         // Arrange
-        var project = new Domain.Project
+        var project = new Project
         {
             Id = 1,
             Name = "Test Project",
             Description = "A project for testing",
             CreatedAt = DateTime.UtcNow,
             User = "User1",
-            Tasks = new List<Domain.Task>()
+            Tasks = []
         };
 
         // Act
@@ -27,20 +29,20 @@ public class Projects
     public void CannotAddMoreThan20TasksToProject()
     {
         // Arrange
-        var project = new Domain.Project
+        var project = new Project
         {
             Id = 1,
             Name = "Test Project",
             Description = "A project for testing",
             CreatedAt = DateTime.UtcNow,
             User = "User1",
-            Tasks = new List<Domain.Task>()
+            Tasks = []
         };
 
         // Adiciona 20 tarefas ao projeto
-        for (int i = 0; i < Domain.Project.MaxTasks; i++)
+        for (int i = 0; i < Project.MaxTasks; i++)
         {
-            project.Tasks.Add(new Domain.Task
+            project.Tasks.Add(new Domain.Entities.Task
             {
                 Id = i + 1,
                 Title = $"Task {i + 1}",

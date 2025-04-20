@@ -2,6 +2,7 @@
 using Configurations.Data;
 using Configurations.Extensions;
 using Domain;
+using Domain.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
@@ -15,10 +16,10 @@ public class Tasks : IEndpoint
     public void MapEndpoints(IEndpointRouteBuilder endpointRouteBuilder)
     {
         endpointRouteBuilder.MapPost("/tasks",
-            async (Domain.Task task,
+            async (Domain.Entities.Task task,
                    DataContext dataContext,
                    HttpContext httpContext,
-                   IValidator<Domain.Task> validator) =>
+                   IValidator<Domain.Entities.Task> validator) =>
             {
                 task.User = httpContext.User.Identity?.Name;
 
@@ -83,10 +84,10 @@ public class Tasks : IEndpoint
 
 
         endpointRouteBuilder.MapPut("/tasks/{id}",
-            async (int id, Domain.Task task,
+            async (int id, Domain.Entities.Task task,
                    DataContext dataContext,
                    HttpContext httpContext,
-                   IValidator<Domain.Task> validator) =>
+                   IValidator<Domain.Entities.Task> validator) =>
             {
                 task.User = httpContext.User.Identity?.Name;
 
@@ -133,7 +134,7 @@ public class Tasks : IEndpoint
 
 
         endpointRouteBuilder.MapGet("/tasks/{id}",
-            async Task<Results<Ok<Domain.Task>, NotFound>>
+            async Task<Results<Ok<Domain.Entities.Task>, NotFound>>
             (int id, DataContext dataContext) =>
             {
                 var task = await dataContext.Tasks

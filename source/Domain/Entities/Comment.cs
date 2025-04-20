@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using System.ComponentModel.DataAnnotations;
 
-namespace Domain;
+namespace Domain.Entities;
 
-public class TaskHistory
+public class Comment
 {
     [Key]
     public int Id { get; set; }
@@ -12,14 +12,14 @@ public class TaskHistory
 
     public string User { get; set; }
 
-    public string Change { get; set; }
+    public string Content { get; set; }
 
-    public DateTime ChangedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
 }
 
-public sealed class TasksHistoryValidator : AbstractValidator<TaskHistory>
+public sealed class CommentValidator : AbstractValidator<Comment>
 {
-    public TasksHistoryValidator()
+    public CommentValidator()
     {
         RuleFor(x => x.TaskId)
             .NotEmpty()
@@ -33,10 +33,10 @@ public sealed class TasksHistoryValidator : AbstractValidator<TaskHistory>
             .MaximumLength(100)
             .WithMessage("User must be at most 100 characters long.");
 
-        RuleFor(x => x.Change)
+        RuleFor(x => x.Content)
             .NotEmpty()
-            .WithMessage("Field change is required.")
+            .WithMessage("Comment content is required.")
             .MaximumLength(1000)
-            .WithMessage("Field changed must be at most 1000 characters long.");
+            .WithMessage("Comment content must be at most 1000 characters long.");
     }
 }
