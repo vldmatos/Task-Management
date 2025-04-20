@@ -7,5 +7,7 @@ public record Report
     int TotalTasks,
     int CompletedTasks,
     int PendingTasks,
-    double AverageCompletionTime
+    double AverageCompletionTime,
+    short DaysCompletedTasksPerUser,
+    double AverageDaysCompletedTasksPerUser
 );

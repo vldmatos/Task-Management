@@ -6,6 +6,7 @@ namespace Domain;
 public class Project
 {
     public const short MaxTasks = 20;
+    public const short DaysAvaragePerUser = 30;
 
     [Key]
     public int Id { get; set; }
@@ -51,10 +52,30 @@ public class Project
             Tasks.Where(t => t.Status == TaskStatus.Completed)
                  .Select(t => (t.CreatedAt - t.DueDate).TotalDays)
                  .DefaultIfEmpty(0)
-                 .Average()
+                 .Average(),
+            DaysAvaragePerUser,
+            CalculateAverageCompletedTasksPerUser()
         );
 
         return report;
+    }
+
+    private double CalculateAverageCompletedTasksPerUser()
+    {
+        var now = DateTime.UtcNow;
+        var thirtyDaysAgo = now.AddDays(-DaysAvaragePerUser);
+
+        var completedTasksLastDays = Tasks.Where(t =>
+                                                 t.Status == TaskStatus.Completed &&
+                                                 t.CreatedAt >= thirtyDaysAgo);
+
+        var averageCompletedTasksPerUser = completedTasksLastDays
+                                                .GroupBy(t => t.User)
+                                                .Select(g => g.Count())
+                                                .DefaultIfEmpty(0)
+                                                .Average();
+
+        return averageCompletedTasksPerUser;
     }
 }
 
