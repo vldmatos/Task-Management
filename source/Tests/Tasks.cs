@@ -1,6 +1,6 @@
 ﻿namespace Tests;
 
-public class TaskTests
+public class Tasks
 {
     [Fact]
     public void Change_ShouldRecordChangesInHistory()
