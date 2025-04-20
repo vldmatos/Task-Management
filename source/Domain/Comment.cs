@@ -10,7 +10,7 @@ public class Comment
 
     public int TaskId { get; set; }
 
-    public int UserId { get; set; }
+    public string User { get; set; }
 
     public string Content { get; set; }
 
@@ -27,11 +27,11 @@ public sealed class CommentValidator : AbstractValidator<Comment>
             .GreaterThan(0)
             .WithMessage("Task ID must be greater than 0.");
 
-        RuleFor(x => x.UserId)
+        RuleFor(x => x.User)
             .NotEmpty()
             .WithMessage("User ID is required.")
-            .GreaterThan(0)
-            .WithMessage("User ID must be greater than 0.");
+            .MaximumLength(100)
+            .WithMessage("User must be at most 100 characters long.");
 
         RuleFor(x => x.Content)
             .NotEmpty()

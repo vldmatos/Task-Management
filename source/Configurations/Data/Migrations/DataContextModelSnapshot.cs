@@ -41,8 +41,8 @@ namespace Configurations.Data.Migrations
                     b.Property<int>("TaskId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
+                    b.Property<string>("User")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -71,8 +71,8 @@ namespace Configurations.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
+                    b.Property<string>("User")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -137,40 +137,14 @@ namespace Configurations.Data.Migrations
                     b.Property<int>("TaskId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
+                    b.Property<string>("User")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("TaskId");
 
                     b.ToTable("TaskHistories");
-                });
-
-            modelBuilder.Entity("Domain.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<int>("Role")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Domain.Comment", b =>

@@ -5,7 +5,6 @@ namespace Configurations.Data;
 
 public class DataContext(DbContextOptions<DataContext> options) : DbContext(options)
 {
-    public DbSet<User> Users { get; set; }
     public DbSet<Project> Projects { get; set; }
     public DbSet<Domain.Task> Tasks { get; set; }
     public DbSet<TaskHistory> TaskHistories { get; set; }
@@ -16,26 +15,6 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity<User>(entity =>
-        {
-            entity.HasKey(options => options.Id);
-            entity.Property(options => options.Id)
-                  .UseIdentityAlwaysColumn()
-                  .ValueGeneratedOnAdd();
-
-            entity.Property(options => options.Name)
-                  .IsRequired()
-                  .HasMaxLength(100);
-
-            entity.Property(options => options.Email)
-                  .IsRequired()
-                  .HasMaxLength(150);
-
-            entity.Property(options => options.Role)
-                  .IsRequired()
-                  .HasConversion<int>();
-        });
 
         modelBuilder.Entity<Project>(entity =>
         {

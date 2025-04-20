@@ -16,7 +16,7 @@ public class Project
 
     public DateTime CreatedAt { get; set; }
 
-    public int UserId { get; set; }
+    public string User { get; set; }
 
     public virtual ICollection<Task> Tasks { get; set; } = [];
 
@@ -56,10 +56,10 @@ public sealed class ProjectValidator : AbstractValidator<Project>
             .MaximumLength(500)
             .WithMessage("Project description must be at most 500 characters long.");
 
-        RuleFor(x => x.UserId)
+        RuleFor(x => x.User)
             .NotEmpty()
-            .WithMessage("User ID is required.")
-            .GreaterThan(0)
-            .WithMessage("User ID must be greater than 0.");
+            .WithMessage("User is required.")
+            .MaximumLength(100)
+            .WithMessage("User must be at most 100 characters long.");
     }
 }

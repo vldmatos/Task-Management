@@ -7,26 +7,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Configurations.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class _001 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Role = table.Column<int>(type: "integer", nullable: false),
-                    Email = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Projects",
                 columns: table => new
@@ -36,17 +21,11 @@ namespace Configurations.Data.Migrations
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UserId = table.Column<int>(type: "integer", nullable: false)
+                    User = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Projects", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Projects_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -81,7 +60,7 @@ namespace Configurations.Data.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn),
                     TaskId = table.Column<int>(type: "integer", nullable: false),
-                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    User = table.Column<string>(type: "text", nullable: true),
                     Content = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -94,12 +73,6 @@ namespace Configurations.Data.Migrations
                         principalTable: "Tasks",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Comments_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -109,10 +82,8 @@ namespace Configurations.Data.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn),
                     TaskId = table.Column<int>(type: "integer", nullable: false),
-                    UserId = table.Column<int>(type: "integer", nullable: false),
-                    FieldChanged = table.Column<string>(type: "text", nullable: false),
-                    OldValue = table.Column<string>(type: "text", nullable: false),
-                    NewValue = table.Column<string>(type: "text", nullable: false),
+                    User = table.Column<string>(type: "text", nullable: true),
+                    Change = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
                     ChangedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
@@ -124,12 +95,6 @@ namespace Configurations.Data.Migrations
                         principalTable: "Tasks",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TaskHistories_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -138,24 +103,9 @@ namespace Configurations.Data.Migrations
                 column: "TaskId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_UserId",
-                table: "Comments",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Projects_UserId",
-                table: "Projects",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_TaskHistories_TaskId",
                 table: "TaskHistories",
                 column: "TaskId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TaskHistories_UserId",
-                table: "TaskHistories",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tasks_ProjectId",
@@ -177,9 +127,6 @@ namespace Configurations.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Projects");
-
-            migrationBuilder.DropTable(
-                name: "Users");
         }
     }
 }
