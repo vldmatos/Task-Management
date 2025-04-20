@@ -44,6 +44,8 @@ public class Task
         if (task.Status != Status)
             Status = task.Status;
 
+        HistoryEntries = GetChanges(task);
+
         return this;
     }
 
