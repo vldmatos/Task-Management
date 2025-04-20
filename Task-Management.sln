@@ -24,6 +24,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "source\Domain\Dom
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "source\Infrastructure\Infrastructure.csproj", "{50DC35BE-E134-D5C5-525A-9568156CA08C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{969C0AF1-C948-42CE-9E53-3A596229FEDD}"
+	ProjectSection(SolutionItems) = preProject
+		coveragereport\index.html = coveragereport\index.html
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +74,7 @@ Global
 		{7369463A-26B2-4ED6-B8DC-01A0F7548FEB} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{069DA99F-3AE2-40C3-AD59-FE0200A53C04} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{50DC35BE-E134-D5C5-525A-9568156CA08C} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{969C0AF1-C948-42CE-9E53-3A596229FEDD} = {B4A8EA6C-6B70-4A9C-A1F0-F3836E5099CF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {90E5F3F5-A2B8-48A3-AC7A-D3FAF813F2BB}

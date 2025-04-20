@@ -63,7 +63,7 @@ public class Project
         return report;
     }
 
-    private double CalculateAverageCompletedTasksPerUser()
+    public double CalculateAverageCompletedTasksPerUser()
     {
         var now = DateTime.UtcNow;
         var thirtyDaysAgo = now.AddDays(-DaysAvaragePerUser);
