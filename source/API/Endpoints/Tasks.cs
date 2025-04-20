@@ -1,4 +1,5 @@
-﻿using Configurations.Data;
+﻿using Configurations.Authorizations;
+using Configurations.Data;
 using Configurations.Extensions;
 using Domain;
 using FluentValidation;
@@ -14,8 +15,13 @@ public class Tasks : IEndpoint
     public void MapEndpoints(IEndpointRouteBuilder endpointRouteBuilder)
     {
         endpointRouteBuilder.MapPost("/tasks",
-            async (Domain.Task task, DataContext dataContext, IValidator<Domain.Task> validator) =>
+            async (Domain.Task task,
+                   DataContext dataContext,
+                   HttpContext httpContext,
+                   IValidator<Domain.Task> validator) =>
             {
+                task.User = httpContext.User.Identity?.Name;
+
                 var validatorResult = validator.Validate(task);
                 if (!validatorResult.IsValid)
                     throw new ProblemException("Validation error", validatorResult.Errors);
@@ -38,12 +44,19 @@ public class Tasks : IEndpoint
                 return Results.Created($"/tasks/{task.Id}", task);
             })
         .WithDescription("Create a new task in an existing project")
-        .WithTags(Group);
+        .WithTags(Group)
+        .RequireAuthorization(policy => policy.RequireRole
+            (Roles.Regular, Roles.Manager));
 
 
         endpointRouteBuilder.MapPost("/tasks/comments",
-            async (Comment comment, DataContext dataContext, IValidator<Comment> validator) =>
+            async (Comment comment,
+                   DataContext dataContext,
+                   HttpContext httpContext,
+                   IValidator<Comment> validator) =>
             {
+                comment.User = httpContext.User.Identity?.Name;
+
                 var validatorResult = validator.Validate(comment);
                 if (!validatorResult.IsValid)
                     throw new ProblemException("Validation error", validatorResult.Errors);
@@ -53,6 +66,7 @@ public class Tasks : IEndpoint
                                             "Comment must be created in an existing task.");
 
                 comment.CreatedAt = DateTime.UtcNow;
+
                 var taskHistory = task.GetChanges(comment);
 
                 dataContext.TaskHistories.Add(taskHistory);
@@ -63,12 +77,19 @@ public class Tasks : IEndpoint
                 return Results.Created($"/tasks/comments/{comment.Id}", comment);
             })
         .WithDescription("Add a comment to a task")
-        .WithTags(Group);
+        .WithTags(Group)
+        .RequireAuthorization(policy => policy.RequireRole
+            (Roles.Regular, Roles.Manager));
 
 
         endpointRouteBuilder.MapPut("/tasks/{id}",
-            async (int id, Domain.Task task, DataContext dataContext, IValidator<Domain.Task> validator) =>
+            async (int id, Domain.Task task,
+                   DataContext dataContext,
+                   HttpContext httpContext,
+                   IValidator<Domain.Task> validator) =>
             {
+                task.User = httpContext.User.Identity?.Name;
+
                 var validatorResult = validator.Validate(task);
                 if (!validatorResult.IsValid)
                     throw new ProblemException("Validation error", validatorResult.Errors);
@@ -78,6 +99,7 @@ public class Tasks : IEndpoint
                     return Results.NotFound();
 
                 var taskHistory = registeredTask.GetChanges(task);
+
                 registeredTask = registeredTask.Change(task);
 
                 dataContext.TaskHistories.AddRange(taskHistory);
@@ -87,7 +109,9 @@ public class Tasks : IEndpoint
                 return Results.NoContent();
             })
         .WithDescription("Update task by id")
-        .WithTags(Group);
+        .WithTags(Group)
+        .RequireAuthorization(policy => policy.RequireRole
+            (Roles.Regular, Roles.Manager));
 
 
         endpointRouteBuilder.MapDelete("/tasks/{id}",
@@ -103,7 +127,9 @@ public class Tasks : IEndpoint
                 return Results.NoContent();
             })
         .WithDescription("Delete task by id")
-        .WithTags(Group);
+        .WithTags(Group)
+        .RequireAuthorization(policy => policy.RequireRole
+            (Roles.Regular, Roles.Manager));
 
 
         endpointRouteBuilder.MapGet("/tasks/{id}",
@@ -118,6 +144,48 @@ public class Tasks : IEndpoint
                     TypedResults.NotFound();
             })
         .WithDescription("Get task by id")
-        .WithTags(Group);
+        .WithTags(Group)
+        .RequireAuthorization(policy => policy.RequireRole
+            (Roles.Regular, Roles.Manager));
+
+
+        endpointRouteBuilder.MapGet("/tasks/{taskId}/comments",
+            async Task<Results<Ok<List<Comment>>, NotFound>>
+            (int taskId, DataContext dataContext) =>
+            {
+                var task = await dataContext.Tasks
+                                            .Include(t => t.Comments)
+                                            .AsNoTracking()
+                                            .FirstOrDefaultAsync(t => t.Id == taskId);
+
+                if (task is null)
+                    return TypedResults.NotFound();
+
+                var comments = task.Comments.ToList();
+                return TypedResults.Ok(comments);
+            })
+        .WithDescription("Get all comments for a specific task by task ID")
+        .WithTags(Group)
+        .RequireAuthorization(policy => policy.RequireRole(Roles.Regular, Roles.Manager));
+
+
+        endpointRouteBuilder.MapGet("/tasks/{taskId}/histories",
+            async Task<Results<Ok<List<TaskHistory>>, NotFound>>
+            (int taskId, DataContext dataContext) =>
+            {
+                var task = await dataContext.Tasks
+                                            .Include(t => t.HistoryEntries)
+                                            .AsNoTracking()
+                                            .FirstOrDefaultAsync(t => t.Id == taskId);
+
+                if (task is null)
+                    return TypedResults.NotFound();
+
+                var histories = task.HistoryEntries.ToList();
+                return TypedResults.Ok(histories);
+            })
+        .WithDescription("Get all task histories for a specific task by task ID")
+        .WithTags(Group)
+        .RequireAuthorization(policy => policy.RequireRole(Roles.Regular, Roles.Manager));
     }
 }

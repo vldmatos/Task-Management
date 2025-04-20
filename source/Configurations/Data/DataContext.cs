@@ -45,6 +45,10 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
                   .IsRequired()
                   .HasMaxLength(100);
 
+            entity.Property(options => options.User)
+                  .IsRequired()
+                  .HasMaxLength(100);
+
             entity.Property(options => options.Description)
                   .HasMaxLength(1000);
 

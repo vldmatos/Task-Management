@@ -20,6 +20,8 @@ public class Task
 
     public DateTime CreatedAt { get; set; }
 
+    public string User { get; set; }
+
     public int ProjectId { get; set; }
 
     public virtual ICollection<TaskHistory> HistoryEntries { get; set; }
@@ -52,16 +54,40 @@ public class Task
         var changes = new List<TaskHistory>();
 
         if (task.Title != Title)
-            changes.Add(new TaskHistory { TaskId = Id, Change = $"Title changed to: {task.Title}", ChangedAt = DateTime.UtcNow });
+            changes.Add(new TaskHistory
+            {
+                TaskId = Id,
+                Change = $"Title changed to: {task.Title}",
+                ChangedAt = DateTime.UtcNow,
+                User = task.User
+            });
 
         if (task.Description != Description)
-            changes.Add(new TaskHistory { TaskId = Id, Change = $"Description changed to: {task.Description}", ChangedAt = DateTime.UtcNow });
+            changes.Add(new TaskHistory
+            {
+                TaskId = Id,
+                Change = $"Description changed to: {task.Description}",
+                ChangedAt = DateTime.UtcNow,
+                User = task.User
+            });
 
         if (task.DueDate != DueDate)
-            changes.Add(new TaskHistory { TaskId = Id, Change = $"DueDate changed to: {task.DueDate}", ChangedAt = DateTime.UtcNow });
+            changes.Add(new TaskHistory
+            {
+                TaskId = Id,
+                Change = $"DueDate changed to: {task.DueDate}",
+                ChangedAt = DateTime.UtcNow,
+                User = task.User
+            });
 
         if (task.Status != Status)
-            changes.Add(new TaskHistory { TaskId = Id, Change = $"Status changed to: {task.Status}", ChangedAt = DateTime.UtcNow });
+            changes.Add(new TaskHistory
+            {
+                TaskId = Id,
+                Change = $"Status changed to: {task.Status}",
+                ChangedAt = DateTime.UtcNow,
+                User = task.User
+            });
 
         return changes;
     }
@@ -74,7 +100,8 @@ public class Task
         {
             TaskId = Id,
             Change = $"Comment added: {comment.Content}",
-            ChangedAt = DateTime.UtcNow
+            ChangedAt = DateTime.UtcNow,
+            User = comment.User
         };
     }
 }
@@ -94,6 +121,12 @@ public sealed class TaskValidator : AbstractValidator<Task>
             .WithMessage("Task description is required.")
             .MaximumLength(1000)
             .WithMessage("Task description must be at most 1000 characters long.");
+
+        RuleFor(x => x.User)
+            .NotEmpty()
+            .WithMessage("User ID is required.")
+            .MaximumLength(100)
+            .WithMessage("User must be at most 100 characters long.");
 
         RuleFor(x => x.DueDate)
             .NotEmpty()

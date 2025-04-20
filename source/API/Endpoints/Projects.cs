@@ -1,4 +1,5 @@
-﻿using Configurations.Data;
+﻿using Configurations.Authorizations;
+using Configurations.Data;
 using Configurations.Extensions;
 using Domain;
 using FluentValidation;
@@ -24,7 +25,9 @@ public class Projects : IEndpoint
                 return TypedResults.Ok(projects);
             })
         .WithDescription("Get all projects")
-        .WithTags(Group);
+        .WithTags(Group)
+        .RequireAuthorization(policy => policy.RequireRole
+            (Roles.Regular, Roles.Manager));
 
 
         endpointRouteBuilder.MapGet("/projects/{id}",
@@ -40,7 +43,9 @@ public class Projects : IEndpoint
                     TypedResults.NotFound();
             })
         .WithDescription("Get project by id")
-        .WithTags(Group);
+        .WithTags(Group)
+        .RequireAuthorization(policy => policy.RequireRole
+            (Roles.Regular, Roles.Manager));
 
 
         endpointRouteBuilder.MapGet("/projects/{id}/tasks",
@@ -57,12 +62,19 @@ public class Projects : IEndpoint
                     TypedResults.NotFound();
             })
         .WithDescription("Get tasks by project id")
-        .WithTags(Group);
+        .WithTags(Group)
+        .RequireAuthorization(policy => policy.RequireRole
+            (Roles.Regular, Roles.Manager));
 
 
         endpointRouteBuilder.MapPost("/projects",
-            async (DataContext dataContext, Project project, IValidator<Project> validator) =>
+            async (DataContext dataContext,
+                   HttpContext httpContext,
+                   Project project,
+                   IValidator<Project> validator) =>
             {
+                project.User = httpContext.User.Identity?.Name;
+
                 var validatorResult = validator.Validate(project);
                 if (!validatorResult.IsValid)
                     throw new ProblemException("Validation error", validatorResult.Errors);
@@ -73,7 +85,9 @@ public class Projects : IEndpoint
                 return TypedResults.Created($"/projects/{project.Id}", project);
             })
         .WithDescription("Create a new project")
-        .WithTags(Group);
+        .WithTags(Group)
+        .RequireAuthorization(policy => policy.RequireRole
+            (Roles.Regular, Roles.Manager));
 
 
         endpointRouteBuilder.MapDelete("/projects/{id}",
@@ -96,6 +110,8 @@ public class Projects : IEndpoint
                 return Results.NoContent();
             })
         .WithDescription("Delete a project by id")
-        .WithTags(Group);
+        .WithTags(Group)
+        .RequireAuthorization(policy => policy.RequireRole
+            (Roles.Regular, Roles.Manager));
     }
 }
