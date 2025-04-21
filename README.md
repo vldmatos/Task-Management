@@ -210,10 +210,45 @@ Esta seção é destinada a registrar perguntas e pontos de esclarecimento para o P
 4. Existe a necessidade de escalar esta API para usuários de vários países?  
 5. Alguma funcionalidade adicional é esperada para o gerenciamento de permissões de usuários?  
 
-### Sugestões de Melhorias  
+
+## Sugestões da Equipe  
+
+Esta seção é destinada para sugerir melhorias a solução proposta.
+
+### Sugestões de Melhorias Funcionais
 1. Sugestão de aplicar uso de inteligencia artificial para analisar tarefas que podem ser dividas ou melhor detalhadas.
 2. Implementar um sistema de arquivamento para projetos e tarefas concluídas.  
 3. Criar um dashboard com métricas em tempo real para os gerentes.  
 4. Permitir a exportação de relatórios em formatos como PDF ou Excel.  
 5. Adicionar suporte a notificações push para atualizações importantes.
-   
+
+### Sugestões de Melhorias Técnicas
+1. **Refatoração de Código:**
+   - Revisar e modularizar métodos longos para melhorar a legibilidade e manutenção.
+   - Adotar um uso maior de interfaces para desacoplar dependências e facilitar testes unitários.
+
+2. **Melhoria na Arquitetura:**
+   - Implementar uso de DTOs para trafevar menos informações.   
+
+3. **Otimização de Desempenho:**
+   - Implementar caching em endpoints de leitura com alta frequência de acesso, utilizando ferramentas como Redis.
+   - Revisar consultas ao banco de dados para evitar N+1 queries e melhorar a eficiência.
+
+4. **Monitoramento e Logs:**
+   - Configurar alertas automáticos para identificar falhas ou degradação de serviços.
+
+5. **Segurança:**
+   - Implementar autenticação e autorização baseadas em políticas para maior controle de acesso.
+   - Melhorar os padrões de RateLimits implementados.
+
+6. **Testes Integração e Carga:**
+   - Incluir testes de integração para cenários críticos.
+   - Configurar testes de carga para avaliar o comportamento do sistema sob alta demanda.
+
+7. **Pipeline de CI/CD:**
+   - Automatizar a execução de testes e validação de código no pipeline de CI/CD.
+   - Adicionar etapas de verificação de segurança, como análise de vulnerabilidades em dependências.
+
+9. **Escalabilidade:**
+   - Revisar a arquitetura para suportar balanceamento de carga horizontal em serviços críticos.
+   - Adicionar suporte a filas de mensagens (ex.: RabbitMQ ou Azure Service Bus) para processar tarefas assíncronas caso necessário.
