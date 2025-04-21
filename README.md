@@ -92,6 +92,12 @@ Alguns ferramentas não sao obrigatórias, mas foram utilizadas no desenvolvimento
     dotnet publish --os linux --arch x64 /t:PublishContainer
     ```
 
+7. **Migrations to Database:**
+    - O projeto de Worker Services tem a responsabilidade de aplicar as migrações no banco de dados.
+    - Para gerar novas migrações, caso modifique entidades ou estrutura de tabelas executar:
+    ```bash
+    dotnet ef migrations add XXX --project source/Configurations/Configurations.csproj --startup-project source/Infrastructure/Infrastructure.csproj --output-dir Data/Migrations
+    ```
     
 ## Testes
 Este projeto possui testes unitários para garantir a qualidade do código. 
