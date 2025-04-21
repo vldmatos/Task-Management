@@ -34,6 +34,9 @@ Todo desenvolvimento foi organizado com issues e os commits associados pelo proj
 Abaixo um desenho da arquitetura do projeto
 ![001](assets/001.png)
 
+Toda Stack com suporte a container e orquestração com Aspire.
+![003](assets/003.png)
+
 ### Projetos das arquitetura
 Projetos que compoem a arquitetura da solução:
 - **Aspire Orchestration**: Responsável pela orchestração dos projetos e containers.
@@ -81,6 +84,13 @@ Alguns ferramentas não sao obrigatórias, mas foram utilizadas no desenvolvimento
 
 5. **Implementação RateLimits:**
     - Os endpoints tem limites de requisições, para proteção do back-end.
+
+6. **Os projetos tem suporte a Build Container .NET:**
+    - Execução de container, sem a necessidade de dockerfile.
+    - Execução de build e execução de containers com o comando:
+    ```bash
+    dotnet publish --os linux --arch x64 /t:PublishContainer
+    ```
 
     
 ## Testes
@@ -169,12 +179,17 @@ Com aspire voce poderá ver os logs e traces das aplicações.
 
 10. Caso queira executar os enpoints diretamente, realize a chamada dos endpoints de simulação de autenticação para obter o token JWT.
 ```bash
-curl -X POST http://localhost:5000/account/login/regular
-curl -X POST http://localhost:5000/account/login/manager
+curl -X POST http://localhost:5180/account/login/regular
+curl -X POST http://localhost:5180/account/login/manager
 ```
 
 11. Para demais endpoints envie o token JWT no header da requisição.
 **Authorization: Bearer {token}**
+```bash
+curl -X GET http://localhost:5180/api/projects \
+-H "Authorization: Bearer {token_jwt}" \
+-H "Content-Type: application/json"
+```
 
 
 
