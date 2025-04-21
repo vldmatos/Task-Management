@@ -25,7 +25,8 @@ public class Account : IEndpoint
                 await context.Response.WriteAsync($"Logged in as Regular User - Bearer: {token}");
             })
         .WithDescription("Simulate login as Regular user")
-        .WithTags(Group);
+        .WithTags(Group)
+        .AllowAnonymous();
 
 
         endpointRouteBuilder.MapPost("/account/login/manager",
@@ -42,7 +43,9 @@ public class Account : IEndpoint
 
                 await context.Response.WriteAsync($"Logged in as Manager User - Bearer: {token}");
             })
+        .RequireRateLimiting(RateLimits.FixedWindow)
         .WithDescription("Simulate login as Manager user")
-        .WithTags(Group);
+        .WithTags(Group)
+        .AllowAnonymous();
     }
 }

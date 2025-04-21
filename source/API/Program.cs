@@ -18,6 +18,7 @@ builder.AddNpgsqlDbContext<DataContext>("projects-database");
 
 builder.Services.AddOpenApi()
                 .AddProblemDetail()
+                .AddRateLimits()
                 .AddEndpoints(Assembly.GetExecutingAssembly())
                 .AddValidatorsFromAssembly(typeof(Project).Assembly, includeInternalTypes: true);
 
@@ -34,6 +35,7 @@ application.MapDefaultEndpoints()
            .MapEndpoints();
 
 application.UseHttpsRedirection()
+           .UseRateLimiter()
            .UseExceptionHandler()
            .UseStatusCodePages();
 

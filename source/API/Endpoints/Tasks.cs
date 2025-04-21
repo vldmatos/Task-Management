@@ -1,5 +1,4 @@
-﻿using Configurations.Authorizations;
-using Configurations.Data;
+﻿using Configurations.Data;
 using Configurations.Extensions;
 using Domain;
 using Domain.Entities;
@@ -44,6 +43,7 @@ public class Tasks : IEndpoint
 
                 return Results.Created($"/tasks/{task.Id}", task);
             })
+        .RequireRateLimiting(RateLimits.FixedWindow)
         .WithDescription("Create a new task in an existing project")
         .WithTags(Group)
         .RequireAuthorization(policy => policy.RequireRole
@@ -77,6 +77,7 @@ public class Tasks : IEndpoint
 
                 return Results.Created($"/tasks/comments/{comment.Id}", comment);
             })
+        .RequireRateLimiting(RateLimits.FixedWindow)
         .WithDescription("Add a comment to a task")
         .WithTags(Group)
         .RequireAuthorization(policy => policy.RequireRole
@@ -109,6 +110,7 @@ public class Tasks : IEndpoint
 
                 return Results.NoContent();
             })
+        .RequireRateLimiting(RateLimits.FixedWindow)
         .WithDescription("Update task by id")
         .WithTags(Group)
         .RequireAuthorization(policy => policy.RequireRole
@@ -127,6 +129,7 @@ public class Tasks : IEndpoint
 
                 return Results.NoContent();
             })
+        .RequireRateLimiting(RateLimits.FixedWindow)
         .WithDescription("Delete task by id")
         .WithTags(Group)
         .RequireAuthorization(policy => policy.RequireRole
@@ -144,6 +147,7 @@ public class Tasks : IEndpoint
                     TypedResults.Ok(task) :
                     TypedResults.NotFound();
             })
+        .RequireRateLimiting(RateLimits.FixedWindow)
         .WithDescription("Get task by id")
         .WithTags(Group)
         .RequireAuthorization(policy => policy.RequireRole
@@ -165,6 +169,7 @@ public class Tasks : IEndpoint
                 var comments = task.Comments.ToList();
                 return TypedResults.Ok(comments);
             })
+        .RequireRateLimiting(RateLimits.FixedWindow)
         .WithDescription("Get all comments for a specific task by task ID")
         .WithTags(Group)
         .RequireAuthorization(policy => policy.RequireRole(Roles.Regular, Roles.Manager));
@@ -185,6 +190,7 @@ public class Tasks : IEndpoint
                 var histories = task.HistoryEntries.ToList();
                 return TypedResults.Ok(histories);
             })
+        .RequireRateLimiting(RateLimits.FixedWindow)
         .WithDescription("Get all task histories for a specific task by task ID")
         .WithTags(Group)
         .RequireAuthorization(policy => policy.RequireRole(Roles.Regular, Roles.Manager));

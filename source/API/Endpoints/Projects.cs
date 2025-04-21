@@ -24,6 +24,7 @@ public class Projects : IEndpoint
 
                 return TypedResults.Ok(projects);
             })
+        .RequireRateLimiting(RateLimits.FixedWindow)
         .WithDescription("Get all projects")
         .WithTags(Group)
         .RequireAuthorization(policy => policy.RequireRole
@@ -42,6 +43,7 @@ public class Projects : IEndpoint
                     TypedResults.Ok(project) :
                     TypedResults.NotFound();
             })
+        .RequireRateLimiting(RateLimits.FixedWindow)
         .WithDescription("Get project by id")
         .WithTags(Group)
         .RequireAuthorization(policy => policy.RequireRole
@@ -61,6 +63,7 @@ public class Projects : IEndpoint
                     TypedResults.Ok(tasks) :
                     TypedResults.NotFound();
             })
+        .RequireRateLimiting(RateLimits.FixedWindow)
         .WithDescription("Get tasks by project id")
         .WithTags(Group)
         .RequireAuthorization(policy => policy.RequireRole
@@ -84,6 +87,7 @@ public class Projects : IEndpoint
 
                 return TypedResults.Created($"/projects/{project.Id}", project);
             })
+        .RequireRateLimiting(RateLimits.FixedWindow)
         .WithDescription("Create a new project")
         .WithTags(Group)
         .RequireAuthorization(policy => policy.RequireRole
@@ -109,10 +113,12 @@ public class Projects : IEndpoint
 
                 return Results.NoContent();
             })
+        .RequireRateLimiting(RateLimits.FixedWindow)
         .WithDescription("Delete a project by id")
         .WithTags(Group)
         .RequireAuthorization(policy => policy.RequireRole
             (Roles.Regular, Roles.Manager));
+
 
         endpointRouteBuilder.MapGet("/projects/{projectId}/report",
             async Task<Results<Ok<Report>, NotFound>>
@@ -136,9 +142,9 @@ public class Projects : IEndpoint
 
                 return TypedResults.Ok(project.GenerateReport(user));
             })
+        .RequireRateLimiting(RateLimits.FixedWindow)
         .WithDescription("Generate a performance report for a specific project")
         .WithTags(Group)
         .RequireAuthorization(policy => policy.RequireRole(Roles.Manager));
-
     }
 }
