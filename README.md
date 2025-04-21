@@ -113,8 +113,9 @@ reportgenerator "-reports:source\Tests\TestResults\[FolderGeneratedCoverlet]\cov
 ```bash
 dotnet test
 ```
+![004](assets/004.png)
 
-**Os relatorios ja foram gerados previamente basta acessar a pagina:**
+**Os relatorios foram gerados previamente, basta acessar a pagina:**
 /coveragereport/index.html
 ![002](assets/002.png)
 
