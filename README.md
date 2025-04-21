@@ -199,7 +199,21 @@ curl -X GET http://localhost:5180/api/projects \
 ```
 
 
+## Questionamento ao PO  
 
+Esta seção é destinada a registrar perguntas e pontos de esclarecimento para o Product Owner (PO) sobre futuras implementações ou melhorias no projeto.  
 
+### Perguntas Abertas  
+1. Existe a necessidade de implementar um sistema de notificações para os usuários sobre prazos ou atualizações de tarefas?  
+2. Há planos para integrar o sistema com outras ferramentas de gerenciamento, como Jira ou Trello?  
+3. Qual é a prioridade para a implementação de relatórios personalizados além dos já especificados?  
+4. Existe a necessidade de escalar esta API para usuários de vários países?  
+5. Alguma funcionalidade adicional é esperada para o gerenciamento de permissões de usuários?  
 
+### Sugestões de Melhorias  
+1. Sugestão de aplicar uso de inteligencia artificial para analisar tarefas que podem ser dividas ou melhor detalhadas.
+2. Implementar um sistema de arquivamento para projetos e tarefas concluídas.  
+3. Criar um dashboard com métricas em tempo real para os gerentes.  
+4. Permitir a exportação de relatórios em formatos como PDF ou Excel.  
+5. Adicionar suporte a notificações push para atualizações importantes.
    
