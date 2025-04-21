@@ -26,9 +26,9 @@ public class Projects : IEndpoint
             })
         .RequireRateLimiting(RateLimits.FixedWindow)
         .WithDescription("Get all projects")
-        .WithTags(Group)
-        .RequireAuthorization(policy => policy.RequireRole
-            (Roles.Regular, Roles.Manager));
+        .WithTags(Group);
+        //.RequireAuthorization(policy => policy.RequireRole
+        //    (Roles.Regular, Roles.Manager));
 
 
         endpointRouteBuilder.MapGet("/projects/{id}",

@@ -18,7 +18,7 @@ public class Task
 
     public TaskPriority Priority { get; init; }
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public string User { get; set; }
 

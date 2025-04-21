@@ -14,7 +14,7 @@ public class Comment
 
     public string Content { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
 
 public sealed class CommentValidator : AbstractValidator<Comment>

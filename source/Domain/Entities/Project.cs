@@ -15,7 +15,7 @@ public class Project
 
     public string Description { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public string User { get; set; }
 
