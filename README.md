@@ -4,14 +4,14 @@ Este repositório contém um projeto com uma solução de gerenciamento de tarefas.
 
 ## Índice
 
-- [Descrição do Projeto](#descrição-do-projeto)
+- [Descrição do Projeto](#descri-o-do-projeto)
 - [Funcionalidades](#funcionalidades)
 - [Arquitetura](#arquitetura)
 - [Testes](#testes)
-- [Instruções](#instruções)
+- [Requisitos](#requisitos)
+- [Instruções](#instru-es)
 - [Questionamento](#questionamento)
 - [Melhorias](#melhorias)
-
 
 ---
 
@@ -41,8 +41,8 @@ Toda Stack com suporte a container e orquestração com Aspire.
 ![003](assets/003.png)
 
 ### Projetos das arquitetura
-Projetos que compoem a arquitetura da solução:
-- **Aspire Orchestration**: Responsável pela orchestração dos projetos e containers.
+Projetos que compõem a arquitetura da solução:
+- **Aspire Orchestration**: Responsável pela orquestração dos projetos e containers.
 - **Docker**: Plataforma de containers para execução dos projetos e containers de suporte.
 - **.Net 9 Minimal API**: Projeto de API.
 - **.Net 9 Blazor App**: Web para utilizar a API.
@@ -59,7 +59,7 @@ Este projeto utiliza alguns componentes para facilitar o desenvolvimento e a man
 - **OpenTelemetry**: Para monitoramento e rastreamento de chamadas entre os serviços.
 
 ### Tools
-Alguns ferramentas não sao obrigatórias, mas foram utilizadas no desenvolvimento:
+Algumas ferramentas não são obrigatórias, mas foram utilizadas no desenvolvimento:
 - **EF Tools**: Para geração de migrações e manipulação do banco de dados.
 - **Dotnet Report Generator**: Para geração de relatórios de cobertura de testes.
 
@@ -83,13 +83,13 @@ Alguns ferramentas não sao obrigatórias, mas foram utilizadas no desenvolvimento
 3. **Mapeamento de Endpoints Automaticos:**
     - Foi implementada uma interface de endpoint para mapear os endpoints automaticamente.
     
-4. **Implementação de validações e regras na camada de dominio:**
-    - A camada de dominio centraliza as regras de negocio e validações, para facilitar na manutenção e testes.
+4. **Implementação de validações e regras na camada de domínio:**
+    - A camada de domínio centraliza as regras de negócio e validações, para facilitar na manutenção e testes.
 
 5. **Implementação RateLimits:**
     - Os endpoints tem limites de requisições, para proteção do back-end.
 
-6. **Os projetos tem suporte a Build Container .NET:**
+6. **Os projetos têm suporte a Build Container .NET:**
     - Execução de container, sem a necessidade de dockerfile.
     - Execução de build e execução de containers com o comando:
     ```bash
@@ -104,8 +104,8 @@ Alguns ferramentas não sao obrigatórias, mas foram utilizadas no desenvolvimento
     ```
 
 8. **O projeto Web Utiliza tailwindcss**
-    - o css final ja foi gerado para aplicação.
-    - caso seja realizada alguma alteração e precise gerar novamente o output executar o comando na pasta do projeto web:
+    - O css final já foi gerado para aplicação.
+    - Caso seja realizada alguma alteração e precise gerar novamente o output executar o comando na pasta do projeto web:
     ```bash
     npx @tailwindcss/cli -i ./wwwroot/css/web.css -o ./wwwroot/css/web.output.css --watch --minify
     ```
@@ -120,7 +120,7 @@ Alguns ferramentas não sao obrigatórias, mas foram utilizadas no desenvolvimento
     
 ## Testes
 Este projeto possui testes unitários para garantir a qualidade do código. 
-Voce pode instalar a ferramenta de geração de relatórios de cobertura de testes, caso não tenha instalado, se desejar com o comando:
+Você pode instalar a ferramenta de geração de relatórios de cobertura de testes, caso não tenha instalado, se desejar com o comando:
 ```bash
 dotnet tool install --global dotnet-reportgenerator-globaltool
 ```
@@ -169,7 +169,7 @@ dotnet test
     - Os usuários podem adicionar comentários a uma tarefa para fornecer informações adicionais.
     - Os comentários devem ser registrados no histórico de alterações da tarefa.
 
-## Intruções
+## Instruções
 
 1. Clone este repositório:
 ```bash
@@ -181,12 +181,12 @@ git clone https://github.com/vldmatos/Task-Management.git
 cd Task-Management
 ```
 
-3. Compile a solução:
+3. Compile a solution:
 ```bash
 dotnet build
 ```
 
-4. Adicione a user-secret para geraçao do token JWT no projeto API:
+4. Adicione a user-secret para gerar o token JWT no projeto API:
 ```bash
 dotnet user-secrets init
 dotnet user-secrets set "JWT_KEY" "9d51ba817b68463f8bf5d4be6e9ec8fd"
@@ -194,14 +194,14 @@ dotnet user-secrets set "JWT_KEY" "9d51ba817b68463f8bf5d4be6e9ec8fd"
 
 5. Abra a Solução do projeto, execute o projeto **Aspire**, aguarde a instalação das imagens e execução dos containers.
 
-6. Sera aberta toda a stack do projeto.
-Com aspire voce poderá ver os logs e traces das aplicações.  
+6. Será aberta toda a stack do projeto.
+Com aspire você poderá ver os logs e traces das aplicações.  
 
 7. O projeto API tem um link para docs Scalar, os endpoints podem ser executados diretamente da interface.
 
 8. O banco de dados tem a interface do PG Admin para visualizar os dados do banco.
 
-9. Execute o projeto Client para testar a aplicação que consome as APIs.
+9. Execute o projeto Web para testar a aplicação que consome as APIs.
 
 10. Caso queira executar os enpoints diretamente, realize a chamada dos endpoints de simulação de autenticação para obter o token JWT.
 ```bash
@@ -235,12 +235,12 @@ Esta seção é destinada a registrar perguntas e pontos de esclarecimento para o P
 Esta seção é destinada para sugerir melhorias a solução proposta.
 
 ### Sugestões de Melhorias Funcionais
-1. Sugestão de aplicar uso de inteligencia artificial para analisar tarefas que podem ser dividas ou melhor detalhadas.
+1. Sugestão de aplicar uso de inteligência artificial para analisar tarefas que podem ser divididas ou melhor detalhadas.
 2. Implementar um sistema de arquivamento para projetos e tarefas concluídas.  
 3. Criar um dashboard com métricas em tempo real para os gerentes.  
 4. Permitir a exportação de relatórios em formatos como PDF ou Excel.  
 5. Adicionar suporte a notificações push para atualizações importantes.
-6. Melhorar o projeto Web, UX/UI e resposividade.
+6. Melhorar o projeto Web, UX/UI e responsividade.
 
 ### Sugestões de Melhorias Técnicas
 1. **Refatoração de Código:**
