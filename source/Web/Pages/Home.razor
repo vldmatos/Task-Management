@@ -1,0 +1,40 @@
+﻿@page "/"
+
+@inject AuthenticateService AuthenticateService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Task Management Client</PageTitle>
+
+
+<div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+	<h1 class="text-4xl font-bold text-gray-800 mb-6">Task Management Client</h1>
+	<h3 class="text-2xl text-gray-600 mb-4">Simulate Login</h3>
+	<div class="space-x-4">
+		<button @onclick="LoginRegularUser" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+			Simulate Regular Login
+		</button>
+		<button @onclick="LoginManagerUser" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+			Simulate Manager Login
+		</button>
+	</div>
+</div>
+
+@code
+{
+	protected override async Task OnInitializedAsync()
+	{
+		await AuthenticateService.AuthenticateRegularAsync();		
+	}
+
+	public async Task LoginRegularUser()
+	{
+		await AuthenticateService.AuthenticateRegularAsync();
+		NavigationManager.NavigateTo("/projects");
+	}
+
+	public async Task LoginManagerUser()
+	{
+		await AuthenticateService.AuthenticateManagerAsync();
+		NavigationManager.NavigateTo("/projects");
+	}
+}

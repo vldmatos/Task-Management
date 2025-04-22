@@ -106,6 +106,13 @@ public class Task
             User = comment.User
         };
     }
+
+    public Task Create()
+    {
+        CreatedAt = DateTime.UtcNow;
+
+        return this;
+    }
 }
 
 public sealed class TaskValidator : AbstractValidator<Task>

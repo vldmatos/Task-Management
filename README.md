@@ -9,6 +9,9 @@ Este repositório contém um projeto com uma solução de gerenciamento de tarefas.
 - [Arquitetura](#arquitetura)
 - [Testes](#testes)
 - [Instruções](#instruções)
+- [Questionamento](#questionamento)
+- [Melhorias](#melhorias)
+
 
 ---
 
@@ -42,7 +45,7 @@ Projetos que compoem a arquitetura da solução:
 - **Aspire Orchestration**: Responsável pela orchestração dos projetos e containers.
 - **Docker**: Plataforma de containers para execução dos projetos e containers de suporte.
 - **.Net 9 Minimal API**: Projeto de API.
-- **.Net 9 Blazor App**: Client para consumos das API.
+- **.Net 9 Blazor App**: Web para utilizar a API.
 - **.Net 9 Worker Services**: Projeto de Infraestrutura para aplicar as migrações de banco de dados.
 - **Container PostgresSQL**: Container com banco de dados de projetos e volume local.
 
@@ -52,6 +55,7 @@ Este projeto utiliza alguns componentes para facilitar o desenvolvimento e a man
 - **FluentValidation**: Para validação de dados das entidades.
 - **Coverlet**: Para geração de dados de cobertura de testes.
 - **Scalar**: Para documentação de APIs.
+- **Tailwindcss**: Para o projeto Web.
 - **OpenTelemetry**: Para monitoramento e rastreamento de chamadas entre os serviços.
 
 ### Tools
@@ -98,6 +102,21 @@ Alguns ferramentas não sao obrigatórias, mas foram utilizadas no desenvolvimento
     ```bash
     dotnet ef migrations add XXX --project source/Configurations/Configurations.csproj --startup-project source/Infrastructure/Infrastructure.csproj --output-dir Data/Migrations
     ```
+
+8. **O projeto Web Utiliza tailwindcss**
+    - o css final ja foi gerado para aplicação.
+    - caso seja realizada alguma alteração e precise gerar novamente o output executar o comando na pasta do projeto web:
+    ```bash
+    npx @tailwindcss/cli -i ./wwwroot/css/web.css -o ./wwwroot/css/web.output.css --watch --minify
+    ```
+
+9. **Endpoints Health:**
+    - As aplicações Web e API tem endpoints de health para verificar a integridade do sistema.
+    - Podem ser utilizados por ferramentas de monitoramento
+    - Endpoint:
+        - /health
+        - /alive
+        - /health/detailed
     
 ## Testes
 Este projeto possui testes unitários para garantir a qualidade do código. 
@@ -186,8 +205,8 @@ Com aspire voce poderá ver os logs e traces das aplicações.
 
 10. Caso queira executar os enpoints diretamente, realize a chamada dos endpoints de simulação de autenticação para obter o token JWT.
 ```bash
-curl -X POST http://localhost:5180/account/login/regular
-curl -X POST http://localhost:5180/account/login/manager
+curl -X GET http://localhost:5180/account/login/regular
+curl -X GET http://localhost:5180/account/login/manager
 ```
 
 11. Para demais endpoints envie o token JWT no header da requisição.
@@ -199,7 +218,7 @@ curl -X GET http://localhost:5180/api/projects \
 ```
 
 
-## Questionamento ao PO  
+## Questionamento  
 
 Esta seção é destinada a registrar perguntas e pontos de esclarecimento para o Product Owner (PO) sobre futuras implementações ou melhorias no projeto.  
 
@@ -211,7 +230,7 @@ Esta seção é destinada a registrar perguntas e pontos de esclarecimento para o P
 5. Alguma funcionalidade adicional é esperada para o gerenciamento de permissões de usuários?  
 
 
-## Sugestões da Equipe  
+## Melhorias 
 
 Esta seção é destinada para sugerir melhorias a solução proposta.
 
@@ -221,6 +240,7 @@ Esta seção é destinada para sugerir melhorias a solução proposta.
 3. Criar um dashboard com métricas em tempo real para os gerentes.  
 4. Permitir a exportação de relatórios em formatos como PDF ou Excel.  
 5. Adicionar suporte a notificações push para atualizações importantes.
+6. Melhorar o projeto Web, UX/UI e resposividade.
 
 ### Sugestões de Melhorias Técnicas
 1. **Refatoração de Código:**
@@ -228,7 +248,7 @@ Esta seção é destinada para sugerir melhorias a solução proposta.
    - Adotar um uso maior de interfaces para desacoplar dependências e facilitar testes unitários.
 
 2. **Melhoria na Arquitetura:**
-   - Implementar uso de DTOs para trafevar menos informações.   
+   - Implementar uso de DTOs para trafegar menos informações.
 
 3. **Otimização de Desempenho:**
    - Implementar caching em endpoints de leitura com alta frequência de acesso, utilizando ferramentas como Redis.

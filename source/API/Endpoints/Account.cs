@@ -10,7 +10,7 @@ public class Account : IEndpoint
 
     public void MapEndpoints(IEndpointRouteBuilder endpointRouteBuilder)
     {
-        endpointRouteBuilder.MapPost("/account/login/regular",
+        endpointRouteBuilder.MapGet("/account/login/regular",
             async (HttpContext context, TokenService tokenService) =>
             {
                 var user = new User
@@ -19,17 +19,14 @@ public class Account : IEndpoint
                     Role = Roles.Regular
                 };
 
-                var token = tokenService.GenerateToken(user);
-
-
-                await context.Response.WriteAsync($"Logged in as Regular User - Bearer: {token}");
+                await context.Response.WriteAsync(tokenService.GenerateToken(user));
             })
         .WithDescription("Simulate login as Regular user")
         .WithTags(Group)
         .AllowAnonymous();
 
 
-        endpointRouteBuilder.MapPost("/account/login/manager",
+        endpointRouteBuilder.MapGet("/account/login/manager",
             async (HttpContext context, TokenService tokenService) =>
             {
                 var user = new User
@@ -38,10 +35,7 @@ public class Account : IEndpoint
                     Role = Roles.Manager
                 };
 
-                var token = tokenService.GenerateToken(user);
-
-
-                await context.Response.WriteAsync($"Logged in as Manager User - Bearer: {token}");
+                await context.Response.WriteAsync(tokenService.GenerateToken(user));
             })
         .RequireRateLimiting(RateLimits.FixedWindow)
         .WithDescription("Simulate login as Manager user")

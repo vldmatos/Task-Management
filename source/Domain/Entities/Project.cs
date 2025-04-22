@@ -21,6 +21,13 @@ public class Project
 
     public virtual ICollection<Task> Tasks { get; set; } = [];
 
+    public Project Create()
+    {
+        CreatedAt = DateTime.UtcNow;
+
+        return this;
+    }
+
     public bool CanBeDeleted()
     {
         if (Tasks.Count == 0)

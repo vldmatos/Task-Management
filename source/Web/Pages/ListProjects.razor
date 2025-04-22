@@ -1,0 +1,77 @@
+﻿@page "/projects"
+
+@inject APIService APIService
+@inject NavigationManager NavigationManager
+
+<div class="flex flex-col space-y-6">
+    <h3 class="text-2xl font-bold text-gray-800">Projects</h3>
+
+    <div>
+        <button @onclick="NavigateToCreateProject" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+            Create New Project
+        </button>
+    </div>
+
+    @if (projects == null)
+    {
+        <p class="text-gray-600">Loading...</p>
+    }
+    else if (!projects.Any())
+    {
+        <p class="text-gray-600">No projects found.</p>
+    }
+    else
+    {
+        <div class="overflow-x-auto">
+            <table class="table-auto w-full border-collapse border border-gray-300">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="border border-gray-300 px-4 py-2 text-left">Name</th>
+                        <th class="border border-gray-300 px-4 py-2 text-left">Description</th>
+                        <th class="border border-gray-300 px-4 py-2 text-left">Created At</th>
+                        <th class="border border-gray-300 px-4 py-2 text-left">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var project in projects)
+                    {
+                        <tr class="hover:bg-gray-50">
+                            <td class="border border-gray-300 px-4 py-2">@project.Name</td>
+                            <td class="border border-gray-300 px-4 py-2">@project.Description</td>
+                            <td class="border border-gray-300 px-4 py-2">@project.CreatedAt.ToString("dd-MM-yyyy")</td>
+                            <td class="border border-gray-300 px-4 py-2">
+                                <a href="/project-details/@project.Id" class="text-blue-500 hover:underline">View Details</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@code
+{
+    private List<Web.Models.Project>? projects;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadProjectsAsync();
+    }
+
+    public async Task ReloadAsync()
+    {
+        await LoadProjectsAsync();
+        StateHasChanged();
+    }
+
+    private async Task LoadProjectsAsync()
+    {
+        projects = await APIService.GetAsync<List<Web.Models.Project>>("Projects");
+    }
+
+    private void NavigateToCreateProject()
+    {
+        NavigationManager.NavigateTo("/project-details");
+    }
+}

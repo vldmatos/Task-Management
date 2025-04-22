@@ -16,19 +16,22 @@ public class Projects : IEndpoint
     {
         endpointRouteBuilder.MapGet("/projects",
             async Task<Ok<Project[]>>
-            (DataContext dataContext) =>
+            (DataContext dataContext, HttpContext httpContext) =>
             {
+                var user = httpContext.User.Identity?.Name;
+
                 var projects = await dataContext.Projects
+                                                .Where(p => p.User == user)
                                                 .AsNoTracking()
                                                 .ToArrayAsync();
 
                 return TypedResults.Ok(projects);
             })
         .RequireRateLimiting(RateLimits.FixedWindow)
-        .WithDescription("Get all projects")
-        .WithTags(Group);
-        //.RequireAuthorization(policy => policy.RequireRole
-        //    (Roles.Regular, Roles.Manager));
+        .WithDescription("Get all projects by username")
+        .WithTags(Group)
+        .RequireAuthorization(policy => policy.RequireRole
+            (Roles.Regular, Roles.Manager));
 
 
         endpointRouteBuilder.MapGet("/projects/{id}",
@@ -82,7 +85,7 @@ public class Projects : IEndpoint
                 if (!validatorResult.IsValid)
                     throw new ProblemException("Validation error", validatorResult.Errors);
 
-                dataContext.Projects.Add(project);
+                dataContext.Projects.Add(project.Create());
                 await dataContext.SaveChangesAsync();
 
                 return TypedResults.Created($"/projects/{project.Id}", project);
@@ -92,6 +95,38 @@ public class Projects : IEndpoint
         .WithTags(Group)
         .RequireAuthorization(policy => policy.RequireRole
             (Roles.Regular, Roles.Manager));
+
+
+        endpointRouteBuilder.MapPut("/projects/{id}",
+            async Task<Results<NoContent, NotFound>>
+            (int id, DataContext dataContext,
+             HttpContext httpContext,
+             Project updatedProject,
+             IValidator<Project> validator) =>
+            {
+                updatedProject.User = httpContext.User.Identity?.Name;
+
+                var validatorResult = validator.Validate(updatedProject);
+                if (!validatorResult.IsValid)
+                    throw new ProblemException("Validation error", validatorResult.Errors);
+
+                var existingProject = await dataContext.Projects.FirstOrDefaultAsync(p => p.Id == id);
+                if (existingProject is null)
+                {
+                    return TypedResults.NotFound();
+                }
+
+                existingProject.Name = updatedProject.Name;
+                existingProject.Description = updatedProject.Description;
+
+                await dataContext.SaveChangesAsync();
+
+                return TypedResults.NoContent();
+            })
+        .RequireRateLimiting(RateLimits.FixedWindow)
+        .WithDescription("Update an existing project by ID")
+        .WithTags(Group)
+        .RequireAuthorization(policy => policy.RequireRole(Roles.Regular, Roles.Manager));
 
 
         endpointRouteBuilder.MapDelete("/projects/{id}",
@@ -137,7 +172,7 @@ public class Projects : IEndpoint
                 var user = new User
                 {
                     Username = httpContext.User.Identity?.Name ?? "Unknown",
-                    Role = httpContext.User.Claims.FirstOrDefault(c => c.Type == "role")?.Value ?? "Unknown"
+                    Role = httpContext.User.Claims.FirstOrDefault(c => c.Value == Roles.Manager)?.Value ?? "Unknown"
                 };
 
                 return TypedResults.Ok(project.GenerateReport(user));

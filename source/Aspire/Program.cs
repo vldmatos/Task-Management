@@ -24,10 +24,10 @@ var api = builder.AddProject<Projects.API>("api")
                  .WaitFor(database)
                  .WaitFor(infrastructure);
 
-builder.AddProject<Projects.Client>("client")
+builder.AddProject<Projects.Web>("web")
        .WithUrlForEndpoint("https", url =>
        {
-           url.DisplayText = "Client";
+           url.DisplayText = "Web";
            url.Url += "/";
        })
        .WithReference(api)

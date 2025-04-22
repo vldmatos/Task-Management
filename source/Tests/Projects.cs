@@ -9,7 +9,26 @@ public class Projects
 
     public Projects()
     {
-        _validator = new Domain.Entities.ProjectValidator();
+        _validator = new ProjectValidator();
+    }
+
+    [Fact]
+    public void Create_ShouldSetCreatedAtToCurrentUtcTime()
+    {
+        // Arrange
+        var project = new Project
+        {
+            Name = "Test Project",
+            Description = "Test Description",
+            User = "TestUser"
+        };
+
+        // Act
+        var result = project.Create();
+
+        // Assert
+        Assert.Equal(project, result); // Ensure the same instance is returned
+        Assert.True((DateTime.UtcNow - project.CreatedAt).TotalSeconds < 1, "CreatedAt should be set to the current UTC time.");
     }
 
     [Fact]

@@ -1,0 +1,33 @@
+﻿@import "tailwindcss";
+
+@theme
+{
+	--color-primary: #CAE1FF;
+	--color-secondary: #C0C2C1;
+	--color-background: #828282;
+	--color-component: #143041
+}
+
+@keyframes gradient-shift
+{
+	0%
+	{
+		background-position: 0% 50%;
+	}
+
+	50%
+	{
+		background-position: 100% 50%;
+	}
+
+	100%
+	{
+		background-position: 0% 50%;
+	}
+}
+
+.animate-gradient
+{
+	background-size: 300% 300%;
+	animation: gradient-shift 3s infinite;
+}

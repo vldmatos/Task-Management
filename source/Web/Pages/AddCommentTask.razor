@@ -1,0 +1,120 @@
+﻿@page "/task-comments"
+@inject APIService APIService
+@inject NavigationManager NavigationManager
+
+<div class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div class="bg-white shadow-md rounded-lg p-8 w-full max-w-3xl">
+        <h3 class="text-2xl font-bold mb-6 text-gray-800 text-center">
+            Comments for Task: @TaskName
+        </h3>
+
+        @if (IsLoading)
+        {
+            <p class="text-lg font-semibold text-gray-700">Loading...</p>
+        }
+        else
+        {
+            <EditForm Model="NewComment" OnValidSubmit="AddComment" class="space-y-4">
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-red-500" />
+
+                <div class="space-y-2">
+                    <label for="content" class="block text-sm font-medium text-gray-700">Add a Comment:</label>
+                    <InputTextArea id="content" @bind-Value="NewComment.Content" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2" />
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md shadow hover:bg-blue-600">
+                        Add Comment
+                    </button>
+                </div>
+            </EditForm>
+
+            <div class="mt-6">
+                <h4 class="text-lg font-semibold text-gray-800 mb-4">Previous Comments</h4>
+                @if (Comments != null && Comments.Any())
+                {
+                    <ul class="space-y-4">
+                        @foreach (var comment in Comments)
+                        {
+                            <li class="bg-gray-100 p-4 rounded-md shadow">
+                                <p class="text-sm text-gray-600"><strong>@comment.User:</strong> @comment.Content</p>
+                                <p class="text-xs text-gray-500">Posted on: @comment.CreatedAt.ToString("dd-MM-yyyy HH:mm:ss")</p>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-gray-500">No comments yet.</p>
+                }
+            </div>
+
+            <div class="mt-6 flex justify-center">
+                <button class="bg-gray-500 text-white px-4 py-2 rounded-md shadow hover:bg-gray-600" @onclick="GoBackToTaskDetails">
+                    Back to Task Details
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    public int TaskId { get; set; }
+
+    private Web.Models.Comment NewComment { get; set; } = new();
+    private List<Web.Models.Comment> Comments { get; set; } = new();
+    private string? TaskName { get; set; }
+    private bool IsLoading { get; set; } = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var task = await APIService.GetAsync<Web.Models.Task>($"tasks/{TaskId}");
+            TaskName = task?.Title;
+
+            await LoadComments();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading task or comments: {ex.Message}");
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private async Task LoadComments()
+    {
+        Comments = await APIService.GetAsync<List<Web.Models.Comment>>($"/tasks/{TaskId}/comments") ?? new List<Web.Models.Comment>();
+
+        Comments = Comments.OrderByDescending(c => c.CreatedAt).ToList();
+    }
+
+    private async Task AddComment()
+    {
+        try
+        {
+            NewComment.TaskId = TaskId;
+
+            await APIService.PostAsync<Web.Models.Comment, Web.Models.Comment>("/tasks/comments", NewComment);
+
+            NewComment.Content = string.Empty;
+
+            await LoadComments();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error adding comment: {ex.Message}");
+        }
+    }
+
+    private void GoBackToTaskDetails()
+    {
+        NavigationManager.NavigateTo($"/task-details/{TaskId}?projectId={TaskId}");
+    }
+}
+

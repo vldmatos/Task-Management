@@ -1,0 +1,24 @@
+﻿@inherits LayoutComponentBase
+
+<div class="flex flex-col min-h-screen">
+    <!-- Navigation Bar -->
+    <nav class="bg-blue-500 text-white shadow-md">
+        <div class="container mx-auto px-4 py-2 flex justify-between items-center">
+            <a href="/" class="text-lg font-bold hover:underline">Task Management</a>
+            <div class="space-x-4">
+                <a href="/" class="hover:underline">Home</a>
+                <a href="/projects" class="hover:underline">Projects</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-6">
+        @Body
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white text-center py-4">
+        <p>&copy; 2025 Task Management. All rights reserved.</p>
+    </footer>
+</div>

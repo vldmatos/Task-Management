@@ -1,0 +1,87 @@
+﻿@page "/projects/{ProjectId:int}/report"
+@inject APIService APIService
+@inject NavigationManager NavigationManager
+
+<div class="flex items-center justify-center min-h-screen bg-gray-100">
+    @if (IsLoading)
+    {
+        <p class="text-lg font-semibold text-gray-700">Loading...</p>
+    }
+    else if (ReportData != null)
+    {
+        <div class="bg-white shadow-md rounded-lg p-8 w-full max-w-4xl">
+            <h3 class="text-3xl font-bold mb-6 text-gray-800 text-center">Project Performance Report</h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-gray-50 p-4 rounded-md shadow">
+                    <h4 class="text-lg font-semibold text-gray-700">Project Name</h4>
+                    <p class="text-gray-600">@ReportData.ProjectName</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-md shadow">
+                    <h4 class="text-lg font-semibold text-gray-700">Total Tasks</h4>
+                    <p class="text-gray-600">@ReportData.TotalTasks</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-md shadow">
+                    <h4 class="text-lg font-semibold text-gray-700">Completed Tasks</h4>
+                    <p class="text-gray-600">@ReportData.CompletedTasks</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-md shadow">
+                    <h4 class="text-lg font-semibold text-gray-700">Pending Tasks</h4>
+                    <p class="text-gray-600">@ReportData.PendingTasks</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-md shadow">
+                    <h4 class="text-lg font-semibold text-gray-700">Average Completion Time (days)</h4>
+                    <p class="text-gray-600">@ReportData.AverageCompletionTime</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-md shadow">
+                    <h4 class="text-lg font-semibold text-gray-700">Days Completed Tasks Per User</h4>
+                    <p class="text-gray-600">@ReportData.DaysCompletedTasksPerUser</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-md shadow">
+                    <h4 class="text-lg font-semibold text-gray-700">Average Days Completed Tasks Per User</h4>
+                    <p class="text-gray-600">@ReportData.AverageDaysCompletedTasksPerUser</p>
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-center">
+                <button class="bg-blue-500 text-white px-6 py-2 rounded-md shadow hover:bg-blue-600" @onclick="GoBack">
+                    Back to Project
+                </button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <p class="text-lg font-semibold text-red-500">Failed to load the report. Please try again later.</p>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int ProjectId { get; set; }
+
+    private Web.Models.Report? ReportData { get; set; }
+    private bool IsLoading { get; set; } = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            ReportData = await APIService.GetAsync<Web.Models.Report>($"projects/{ProjectId}/report");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading report: {ex.Message}");
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo($"/project-details/{ProjectId}");
+    }
+}
+

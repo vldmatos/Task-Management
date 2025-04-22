@@ -13,6 +13,24 @@ public class Comments
     }
 
     [Fact]
+    public void Create_ShouldSetCreatedAtToCurrentUtcTime()
+    {
+        // Arrange
+        var comment = new Comment
+        {
+            Content = "This is a test comment.",
+            User = "TestUser"
+        };
+
+        // Act
+        var result = comment.Create();
+
+        // Assert
+        Assert.Equal(comment, result); // Ensure the same instance is returned
+        Assert.True((DateTime.UtcNow - comment.CreatedAt).TotalSeconds < 1, "CreatedAt should be set to the current UTC time.");
+    }
+
+    [Fact]
     public void Should_HaveError_When_TaskIdIsZero()
     {
         // Arrange

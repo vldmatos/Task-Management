@@ -13,6 +13,29 @@ public class Tasks
     }
 
     [Fact]
+    public void Create_ShouldSetCreatedAtToCurrentUtcTime()
+    {
+        // Arrange
+        var task = new Domain.Entities.Task
+        {
+            Title = "Test Task",
+            Description = "Test Description",
+            DueDate = DateTime.UtcNow.AddDays(1),
+            Status = Domain.TaskStatus.Pending,
+            Priority = TaskPriority.Medium,
+            User = "TestUser",
+            ProjectId = 1
+        };
+
+        // Act
+        var result = task.Create();
+
+        // Assert
+        Assert.Equal(task, result); // Ensure the same instance is returned
+        Assert.True((DateTime.UtcNow - task.CreatedAt).TotalSeconds < 1, "CreatedAt should be set to the current UTC time.");
+    }
+
+    [Fact]
     public void Change_ShouldRecordChangesInHistory()
     {
         // Arrange
